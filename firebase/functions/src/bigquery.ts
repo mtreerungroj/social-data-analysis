@@ -1,5 +1,5 @@
-import {BigQuery} from "@google-cloud/bigquery";
-import {BQ_PROJECT_ID, BQ_DATASET_LOCATION, BQ_SERVICE_ACCOUNT_KEY_FILENAME} from "../env.json";
+import { BigQuery } from "@google-cloud/bigquery";
+import { BQ_PROJECT_ID, BQ_DATASET_LOCATION, BQ_SERVICE_ACCOUNT_KEY_FILENAME } from "./env.json";
 
 const bq = new BigQuery({
   keyFilename: BQ_SERVICE_ACCOUNT_KEY_FILENAME,
