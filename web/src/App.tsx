@@ -29,11 +29,13 @@ function App() {
     <div className="App">
       {hashtagList &&
         <Autocomplete
-          disablePortal
-          id="combo-box-demo"
+          autoHighlight
+          id="hashtag-search"
           options={hashtagList}
-          sx={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Search Hashtag" />}
+          sx={{ width: 400 }}
+          popupIcon={""}
+          noOptionsText={'No hashtag'}
+          renderInput={(params) => <TextField {...params} label="Search hashtag" />}
           onChange={(event, newValue: any, reason: string) => {
             if (reason === 'selectOption') {
               setFocusHashtag(newValue)
