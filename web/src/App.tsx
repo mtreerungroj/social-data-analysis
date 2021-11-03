@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { HashtagSearch } from './component/HashtagSearch';
+import { StackedBarChart } from './d3/stackedBarChart';
 import { IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
 import { fetchHashtagListData, fetchHashtagRelationshipData } from './util/fetchData';
 
@@ -34,7 +35,11 @@ function App() {
           <HashtagSearch hashtagList={hashtagList} setFocusHashtag={setFocusHashtag} />
           {focusHashtag ?
             <div>Show network graph for {focusHashtag.label}</div> :
-            <div>No focus hashtag, show top trending hashtag </div>}
+            <div>
+              No focus hashtag, show top trending hashtag
+              <StackedBarChart />
+            </div>
+          }
         </div>
       }
     </div>
