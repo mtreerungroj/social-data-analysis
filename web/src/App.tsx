@@ -28,22 +28,24 @@ function App() {
   return (
     <div className="App">
       {hashtagList &&
-        <Autocomplete
-          autoHighlight
-          id="hashtag-search"
-          options={hashtagList}
-          sx={{ width: 400 }}
-          popupIcon={""}
-          noOptionsText={'No hashtag'}
-          renderInput={(params) => <TextField {...params} label="Search hashtag" />}
-          onChange={(event, newValue: any, reason: string) => {
-            if (reason === 'selectOption') {
-              setFocusHashtag(newValue)
-            } else {
-              return
-            }
-          }}
-        />
+        <div style={{ margin: '50px' }}>
+          <Autocomplete
+            autoHighlight
+            id="hashtag-search"
+            options={hashtagList}
+            sx={{ width: 400 }}
+            popupIcon={""}
+            noOptionsText={'No hashtag'}
+            renderInput={(params) => <TextField {...params} label="Search hashtag" />}
+            onChange={(event, newValue: any, reason: string) => {
+              if (reason === 'selectOption') {
+                setFocusHashtag(newValue)
+              } else {
+                return
+              }
+            }}
+          />
+        </div>
       }
     </div>
   );
