@@ -5,7 +5,7 @@ import { fetchHashtagListData } from './util/fetchData';
 
 function App() {
   let [hashtagList, sethashtagList] = useState<IHashtagItem[]>()
-  let [focusHashtag, setFocusHashtag] = useState()
+  let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
 
   useEffect(() => {
     fetchHashtagListData().then(data => sethashtagList(data))
@@ -24,6 +24,9 @@ function App() {
       {hashtagList &&
         <div style={{ margin: '50px' }}>
           <HashtagSearch hashtagList={hashtagList} setFocusHashtag={setFocusHashtag} />
+          {focusHashtag ?
+            <div>Show network graph for {focusHashtag.label}</div> :
+            <div>No focus hashtag, show top trending hashtag </div>}
         </div>
       }
     </div>

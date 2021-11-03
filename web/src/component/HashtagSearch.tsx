@@ -19,6 +19,8 @@ export const HashtagSearch = (props: IHashtagSearchProps) => {
     onChange={(event, newValue: any, reason: string) => {
       if (reason === 'selectOption') {
         setFocusHashtag(newValue)
+      } else if (reason === 'clear') {
+        setFocusHashtag(null)
       } else {
         return
       }
