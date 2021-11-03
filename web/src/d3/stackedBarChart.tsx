@@ -68,12 +68,12 @@ const drawStackedBarChart = (top10HashtagList: any) => {
       .on("wheel", (event: any) => event.preventDefault());
 
     function zoomed(event: any) {
-      y.range([MARGIN.TOP, HEIGHT - MARGIN.BOTTOM].map(d => event.transform.applyY(d)));
-      x.range([MARGIN.TOP, HEIGHT - MARGIN.BOTTOM].map(d => event.transform.applyX(d)));
+      console.log('zoomed', event)
+      y.range([MARGIN.TOP, HEIGHT - MARGIN.BOTTOM].map((d, i) => event.transform.applyY(d)));
       svg.selectAll(".bars rect")
         // @ts-ignore
         .attr("y", (d: any, i: any) => y(d.data.hashtag))
-        .attr("height", y.bandwidth());
+        .attr("height", y.bandwidth() - 5 / event.transform.k);
     }
   }
 
@@ -99,7 +99,6 @@ const drawStackedBarChart = (top10HashtagList: any) => {
   const svg = d3.select("#stack-bar-chart-area").append("svg")
     .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
     .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
-    // .attr("viewBox", "0, 0, width, height")
     .call(zoom)
     // .on("mousemove", function (event) {
     //   let coordinate = d3.pointer(event);
@@ -130,7 +129,7 @@ const drawStackedBarChart = (top10HashtagList: any) => {
     // @ts-ignore
     .attr("y", (d, i) => y(d.data.hashtag))
     .attr("width", d => x(d[1]) - x(d[0]))
-    .attr("height", y.bandwidth());
+    .attr("height", y.bandwidth() - 5);
 
   // svg.append("rect")
   //   .attr("x", 0)
