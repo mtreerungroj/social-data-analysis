@@ -3,3 +3,10 @@ export interface IHashtagItem {
   label: string,
   value: number,
 }
+
+export interface IHashtagRelationshipItem {
+  id: number,
+  nodeA: string,
+  nodeb: string,
+  value: number,
+}

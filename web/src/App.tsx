@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { HashtagSearch } from './component/HashtagSearch';
-import { IHashtagItem } from './type/dataTypes';
-import { fetchHashtagListData } from './util/fetchData';
+import { IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
+import { fetchHashtagListData, fetchHashtagRelationshipData } from './util/fetchData';
 
 function App() {
-  let [hashtagList, sethashtagList] = useState<IHashtagItem[]>()
+  let [hashtagList, setHashtagList] = useState<IHashtagItem[]>()
   let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
+  let [hashtagRelationshipList, setHashtagRelationshipList] = useState<IHashtagRelationshipItem[]>()
 
   useEffect(() => {
-    fetchHashtagListData().then(data => sethashtagList(data))
+    fetchHashtagListData().then(data => setHashtagList(data))
   }, [])
 
   useEffect(() => {
@@ -16,8 +17,15 @@ function App() {
   }, [hashtagList])
 
   useEffect(() => {
-    console.log('focusHashtag', focusHashtag)
+    console.log('focusHashtag, fetching hashtag data...', focusHashtag)
+    if (focusHashtag) {
+      fetchHashtagRelationshipData(focusHashtag).then(data => setHashtagRelationshipList(data))
+    }
   }, [focusHashtag])
+
+  useEffect(() => {
+    console.log('hashtagRelationshipList', hashtagRelationshipList)
+  }, [hashtagRelationshipList])
 
   return (
     <div className="App">
