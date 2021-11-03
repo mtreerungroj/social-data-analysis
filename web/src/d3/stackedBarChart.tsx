@@ -26,7 +26,7 @@ const drawStackedBarChart = (top10HashtagList: any) => {
   const data = sortData(top10HashtagList, sortBy, true)
 
   const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
-  const HEIGHT = 300
+  const HEIGHT = 500
   const WIDTH = 800
   const keys = ["facebook", "twitter", "instagram", "youtube"]
 
@@ -68,7 +68,6 @@ const drawStackedBarChart = (top10HashtagList: any) => {
       .on("wheel", (event: any) => event.preventDefault());
 
     function zoomed(event: any) {
-      console.log('zoomed', event)
       y.range([MARGIN.TOP, HEIGHT - MARGIN.BOTTOM].map((d, i) => event.transform.applyY(d)));
       svg.selectAll(".bars rect")
         // @ts-ignore
@@ -100,23 +99,23 @@ const drawStackedBarChart = (top10HashtagList: any) => {
     .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
     .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
     .call(zoom)
-    // .on("mousemove", function (event) {
-    //   let coordinate = d3.pointer(event);
-    //   // @ts-ignore
-    //   let focusHashtag = data.find(e => e.hashtag === y.invert(coordinate[1]));
-    //   if (!focusHashtag) {
-    //     return
-    //   }
+    .on("mousemove", function (event) {
+      let coordinate = d3.pointer(event);
+      // @ts-ignore
+      let focusHashtag = data.find(e => e.hashtag === y.invert(coordinate[1]));
+      if (!focusHashtag) {
+        return
+      }
 
-    //   svg.selectAll(".tooltip text.hashtag").text("ID:" + focusHashtag.hashtag);
-    //   svg.selectAll(".tooltip text.facebook").text("Name:" + focusHashtag.facebook);
-    //   svg.selectAll(".tooltip text.twitter").text("Total:" + focusHashtag.twitter);
-    //   svg.selectAll(".tooltip text.instagram").text("HP:" + focusHashtag.instagram);
-    //   svg.selectAll(".tooltip text.youtube").text("Attack:" + focusHashtag.youtube);
-    // });
+      svg.selectAll(".tooltip text.hashtag").text("Hashtag:" + focusHashtag.hashtag);
+      svg.selectAll(".tooltip text.facebook").text("Facebook:" + focusHashtag.facebook);
+      svg.selectAll(".tooltip text.twitter").text("Twitter:" + focusHashtag.twitter);
+      svg.selectAll(".tooltip text.instagram").text("Instagram:" + focusHashtag.instagram);
+      svg.selectAll(".tooltip text.youtube").text("Youtube:" + focusHashtag.youtube);
+    });
 
 
-    .selectAll("g")
+  svg.selectAll("g")
     .data(series)
     .join("g")
     // @ts-ignore
@@ -131,42 +130,42 @@ const drawStackedBarChart = (top10HashtagList: any) => {
     .attr("width", d => x(d[1]) - x(d[0]))
     .attr("height", y.bandwidth() - 5);
 
-  // svg.append("rect")
-  //   .attr("x", 0)
-  //   .attr("y", 0)
-  //   .attr("fill", "white")
-  //   .attr("width", WIDTH)
-  //   .attr("height", MARGIN.TOP);
+  svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("fill", "white")
+    .attr("width", WIDTH)
+    .attr("height", MARGIN.TOP);
 
-  // svg.append("g")
-  //   .attr("class", "tooltip")
-  //   .attr("transform", "translate(" + (WIDTH - MARGIN.RIGHT - 200) + ",50)");
+  svg.append("g")
+    .attr("class", "tooltip")
+    .attr("transform", "translate(" + (WIDTH - MARGIN.RIGHT - 200) + ",50)");
 
-  // let tooltipg = svg.selectAll(".tooltip");
-  // tooltipg.append("rect")
-  //   .attr("width", 200)
-  //   .attr("height", 400)
-  //   .attr("fill", "yellowgreen");
+  let tooltipg = svg.selectAll(".tooltip");
+  tooltipg.append("rect")
+    .attr("width", 200)
+    .attr("height", 400)
+    .attr("fill", "yellowgreen");
 
-  // tooltipg.append("text")
-  //   .attr("class", "hashtag")
-  //   .attr("y", 20);
-  // tooltipg.append("facebook")
-  //   .attr("class", "Name")
-  //   .attr("y", 40);
-  // tooltipg.append("twitter")
-  //   .attr("class", "Type")
-  //   .attr("y", 60);
-  // tooltipg.append("instagram")
-  //   .attr("class", "Total")
-  //   .attr("y", 80);
-  // tooltipg.append("youtube")
-  //   .attr("class", "HP")
-  //   .attr("y", 100);
+  tooltipg.append("text")
+    .attr("class", "hashtag")
+    .attr("y", 20);
+  tooltipg.append("text")
+    .attr("class", "facebook")
+    .attr("y", 40);
+  tooltipg.append("text")
+    .attr("class", "twitter")
+    .attr("y", 60);
+  tooltipg.append("text")
+    .attr("class", "instagram")
+    .attr("y", 80);
+  tooltipg.append("text")
+    .attr("class", "youtube")
+    .attr("y", 100);
 
-  // svg.append("g")
-  //   .attr("class", "x-axis")
-  //   .call(xAxis);
+  svg.append("g")
+    .attr("class", "x-axis")
+    .call(xAxis);
 
   // svg.node();
 }
