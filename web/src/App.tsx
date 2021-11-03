@@ -1,20 +1,14 @@
-import { Autocomplete, TextField } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import { HashtagSearch } from './component/HashtagSearch';
+import { IHashtagItem } from './type/dataTypes';
+import { fetchHashtagListData } from './util/fetchData';
 
 function App() {
-  let [hashtagList, sethashtagList] = useState(null)
-  let [focusHashtag, setFocusHashtag] = useState(null)
+  let [hashtagList, sethashtagList] = useState<IHashtagItem[]>()
+  let [focusHashtag, setFocusHashtag] = useState()
 
   useEffect(() => {
-    // const hashtagListDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagList?minimumPost=10000"
-    const hashtagListDataPATH = "data/hashtagList.json"
-    fetch(hashtagListDataPATH)
-      .then(res => res.json())
-      .then(data => sethashtagList(data.map((e: any, i: Number) => ({
-        id: i,
-        label: e.hashtag,
-        value: e.no_hashtags
-      }))))
+    fetchHashtagListData().then(data => sethashtagList(data))
   }, [])
 
   useEffect(() => {
@@ -29,22 +23,7 @@ function App() {
     <div className="App">
       {hashtagList &&
         <div style={{ margin: '50px' }}>
-          <Autocomplete
-            autoHighlight
-            id="hashtag-search"
-            options={hashtagList}
-            sx={{ width: 400 }}
-            popupIcon={""}
-            noOptionsText={'No hashtag'}
-            renderInput={(params) => <TextField {...params} label="Search hashtag" />}
-            onChange={(event, newValue: any, reason: string) => {
-              if (reason === 'selectOption') {
-                setFocusHashtag(newValue)
-              } else {
-                return
-              }
-            }}
-          />
+          <HashtagSearch hashtagList={hashtagList} setFocusHashtag={setFocusHashtag} />
         </div>
       }
     </div>
