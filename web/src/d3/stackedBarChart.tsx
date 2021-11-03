@@ -1,15 +1,21 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
 import top10HashtagList from '../data/top10HashtagList.json'
+import { Legend } from './Legend'
 
 console.log('top10HashtagList', top10HashtagList)
 
 export const StackedBarChart = () => {
   useEffect(() => {
     drawStackedBarChart(top10HashtagList)
+    Legend(["facebook", "twitter", "instagram", "youtube"])
   }, [])
 
-  return <div id="stack-bar-chart-area"></div>
+  return <div>
+    <div id="stack-bar-chart-legend"></div>
+    {/* <Legend /> */}
+    <div id="stack-bar-chart-area"></div>
+  </div>
 }
 
 const sortData = (data: any, sortBy: string, ascending: boolean = true) => {
@@ -92,9 +98,6 @@ const drawStackedBarChart = (top10HashtagList: any) => {
       .map(d => (d.forEach(v => v.key = d.key), d))
   }
 
-
-  console.log('series', series())
-
   const svg = d3.select("#stack-bar-chart-area").append("svg")
     .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
     .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
@@ -167,5 +170,4 @@ const drawStackedBarChart = (top10HashtagList: any) => {
     .attr("class", "x-axis")
     .call(xAxis);
 
-  // svg.node();
 }
