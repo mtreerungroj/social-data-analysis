@@ -5,15 +5,21 @@ import { Legend } from './Legend'
 
 console.log('top10HashtagList', top10HashtagList)
 
+const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
+const HEIGHT = 500
+const WIDTH = 800
+const sortBy = 'hashtag'
+const keys = ["facebook", "twitter", "instagram", "youtube"]
+const keyssel = ["facebook", "twitter", "instagram", "youtube"]
+
 export const StackedBarChart = () => {
   useEffect(() => {
     drawStackedBarChart(top10HashtagList)
-    Legend(["facebook", "twitter", "instagram", "youtube"])
+    Legend(keys)
   }, [])
 
   return <div>
     <div id="stack-bar-chart-legend"></div>
-    {/* <Legend /> */}
     <div id="stack-bar-chart-area"></div>
   </div>
 }
@@ -27,14 +33,7 @@ const sortData = (data: any, sortBy: string, ascending: boolean = true) => {
 }
 
 const drawStackedBarChart = (top10HashtagList: any) => {
-  const sortBy = 'hashtag'
-
   const data = sortData(top10HashtagList, sortBy, true)
-
-  const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
-  const HEIGHT = 500
-  const WIDTH = 800
-  const keys = ["facebook", "twitter", "instagram", "youtube"]
 
   const color = d3.scaleOrdinal()
     .domain(keys)
@@ -64,7 +63,6 @@ const drawStackedBarChart = (top10HashtagList: any) => {
     return scale(a)
   };
 
-
   function zoom(svg: any) {
     svg.call(d3.zoom()
       .scaleExtent([1, 3])
@@ -81,8 +79,6 @@ const drawStackedBarChart = (top10HashtagList: any) => {
         .attr("height", y.bandwidth() - 5 / event.transform.k);
     }
   }
-
-  const keyssel = ["facebook", "twitter", "instagram", "youtube"]
 
   const series = () => {
     let t = keyssel.filter(function (value, index, arr) { return value !== sortBy; });
@@ -145,6 +141,7 @@ const drawStackedBarChart = (top10HashtagList: any) => {
     .attr("transform", "translate(" + (WIDTH - MARGIN.RIGHT - 200) + ",50)");
 
   let tooltipg = svg.selectAll(".tooltip");
+
   tooltipg.append("rect")
     .attr("width", 200)
     .attr("height", 400)
@@ -169,5 +166,4 @@ const drawStackedBarChart = (top10HashtagList: any) => {
   svg.append("g")
     .attr("class", "x-axis")
     .call(xAxis);
-
 }
