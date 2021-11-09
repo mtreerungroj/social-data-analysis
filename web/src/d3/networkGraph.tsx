@@ -70,11 +70,11 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .attr('fill', '#999')
     .style('stroke', 'none');
 
-  svg.append("text")
-    .text("Robot Components")
-    .attr("text-anchor", "middle")
-    .attr("x", WIDTH / 2)
-    .style("font-size", "20px")
+  // svg.append("text")
+  //   .text("Robot Components")
+  //   .attr("text-anchor", "middle")
+  //   .attr("x", WIDTH / 2)
+  //   .style("font-size", "20px")
 
   // Initialize the links
   const link = svg.selectAll(".links")
@@ -92,8 +92,8 @@ const drawNetworkGraph = (hashtagRelation: any) => {
 
   //The <title> element provides an accessible, short-text description of any SVG container element or graphics element.
   //Text in a <title> element is not rendered as part of the graphic, but browsers usually display it as a tooltip.
-  // link.append("title")
-  //   .text(d => d.type);
+  link.append("title")
+    .text((d: any) => d.value);
 
   const edgepaths = svg.selectAll(".edgepath") //make path go along with the link provide position for link labels
     .data(dataset.links)
@@ -150,11 +150,11 @@ const drawNetworkGraph = (hashtagRelation: any) => {
   node.append("text")
     .attr("dy", 4)
     .attr("dx", -15)
-    .text((d: any) => d.name);
-  node.append("text")
-    .attr("dy", 12)
-    .attr("dx", -8)
-    .text((d: any) => d.runtime);
+    .text((d: any) => d.id);
+  // node.append("text")
+  //   .attr("dy", 12)
+  //   .attr("dx", -8)
+  //   .text((d: any) => d.runtime);
 
   //set up dictionary of neighbors
   var neighborTarget = {};
@@ -277,53 +277,53 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     d.fy = event.y;
   }
 
-  //drawing the legend
-  const legend_g = svg.selectAll(".legend")
-    // .data(colorScale.domain())
-    .enter().append("g")
-    .attr("transform", (d, i) => `translate(${WIDTH},${i * 20})`);
+  // //drawing the legend
+  // const legend_g = svg.selectAll(".legend")
+  //   // .data(colorScale.domain())
+  //   .enter().append("g")
+  //   .attr("transform", (d, i) => `translate(${WIDTH},${i * 20})`);
 
-  legend_g.append("circle")
-    .attr("cx", 0)
-    .attr("cy", 0)
-    .attr("r", 5)
-  // @ts-ignore
-  // .attr("fill", colorScale);
+  // legend_g.append("circle")
+  //   .attr("cx", 0)
+  //   .attr("cy", 0)
+  //   .attr("r", 5)
+  // // @ts-ignore
+  // // .attr("fill", colorScale);
 
-  legend_g.append("text")
-    .attr("x", 10)
-    .attr("y", 5)
-    .text((d: any) => d);
+  // legend_g.append("text")
+  //   .attr("x", 10)
+  //   .attr("y", 5)
+  //   .text((d: any) => d);
 
-  //drawing the second legend
-  const legend_g2 = svg.append("g")
-    //.attr("transform", (d, i) => `translate(${width},${i * 20})`); 
-    .attr("transform", `translate(${WIDTH}, 120)`);
+  // //drawing the second legend
+  // const legend_g2 = svg.append("g")
+  //   //.attr("transform", (d, i) => `translate(${width},${i * 20})`); 
+  //   .attr("transform", `translate(${WIDTH}, 120)`);
 
-  legend_g2.append("circle")
-    .attr("r", 5)
-    .attr("cx", 0)
-    .attr("cy", 0)
-    .style("stroke", "grey")
-    .style("stroke-opacity", 0.3)
-    .style("stroke-width", 15)
-    .style("fill", "black")
-  legend_g2.append("text")
-    .attr("x", 15)
-    .attr("y", 0)
-    .text("long runtime");
+  // legend_g2.append("circle")
+  //   .attr("r", 5)
+  //   .attr("cx", 0)
+  //   .attr("cy", 0)
+  //   .style("stroke", "grey")
+  //   .style("stroke-opacity", 0.3)
+  //   .style("stroke-width", 15)
+  //   .style("fill", "black")
+  // legend_g2.append("text")
+  //   .attr("x", 15)
+  //   .attr("y", 0)
+  //   .text("long runtime");
 
-  legend_g2.append("circle")
-    .attr("r", 5)
-    .attr("cx", 0)
-    .attr("cy", 20)
-    .style("stroke", "grey")
-    .style("stroke-opacity", 0.3)
-    .style("stroke-width", 2)
-    .style("fill", "black")
-  legend_g2.append("text")
-    .attr("x", 15)
-    .attr("y", 20)
-    .text("short runtime");
+  // legend_g2.append("circle")
+  //   .attr("r", 5)
+  //   .attr("cx", 0)
+  //   .attr("cy", 20)
+  //   .style("stroke", "grey")
+  //   .style("stroke-opacity", 0.3)
+  //   .style("stroke-width", 2)
+  //   .style("fill", "black")
+  // legend_g2.append("text")
+  //   .attr("x", 15)
+  //   .attr("y", 20)
+  //   .text("short runtime");
 
 }
