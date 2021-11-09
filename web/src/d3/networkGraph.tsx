@@ -171,8 +171,8 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   console.log("neighborSource is ", neighborSource);
   console.log("neighborTarget is ", neighborTarget);
 
-  node.selectAll("circle").on("click", function (d) {
-
+  node.selectAll("circle").on("click", function (event, d: any) {
+    console.log("clicked on ", d.id);
     // var active = d.active ? false : true // toggle whether node is active
     //   , newStroke = active ? "yellow" : "grey"
     //   , newStrokeIn = active ? "green" : "grey"
@@ -185,7 +185,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     //   .attr("dy", 14)
     //   .attr("dx", 14)
 
-    //extract node's id and ids of its neighbors
+    // extract node's id and ids of its neighbors
     // var id = d.id
     //   // @ts-ignore
     //   , neighborS = neighborSource[id]
