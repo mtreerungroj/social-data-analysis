@@ -148,6 +148,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   node.append("text")
     .attr('text-anchor', 'middle')
     .attr('alignment-baseline', 'middle')
+    // .attr('font-size', (d: any) => d.size > 100 ? '16px' : '8px')
     .text((d: any) => d.id);
 
   //set up dictionary of neighbors
@@ -155,6 +156,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   for (var i = 0; i < dataset.nodes.length; i++) {
     var id = dataset.nodes[i].id;
     // @ts-ignore
+    // eslint-disable-next-line no-loop-func
     neighborTarget[id] = dataset.links.filter(d => d.source === id).map(d => d.target)
   }
 
@@ -162,20 +164,21 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   for (var i = 0; i < dataset.nodes.length; i++) {
     var id = dataset.nodes[i].id;
     // @ts-ignore
+    // eslint-disable-next-line no-loop-func
     neighborSource[id] = dataset.links.filter(d => d.target == id).map(d => d.source)
   }
 
-  // console.log("neighborSource is ", neighborSource);
-  // console.log("neighborTarget is ", neighborTarget);
+  console.log("neighborSource is ", neighborSource);
+  console.log("neighborTarget is ", neighborTarget);
 
   node.selectAll("circle").on("click", function (d) {
 
-    var active = d.active ? false : true // toggle whether node is active
-      , newStroke = active ? "yellow" : "grey"
-      , newStrokeIn = active ? "green" : "grey"
-      , newStrokeOut = active ? "red" : "grey"
-      , newOpacity = active ? 0.6 : 0.3
-      , subgraphOpacity = active ? 0.9 : 0;
+    // var active = d.active ? false : true // toggle whether node is active
+    //   , newStroke = active ? "yellow" : "grey"
+    //   , newStrokeIn = active ? "green" : "grey"
+    //   , newStrokeOut = active ? "red" : "grey"
+    //   , newOpacity = active ? 0.6 : 0.3
+    //   , subgraphOpacity = active ? 0.9 : 0;
 
     // subgraph.selectAll("text")
     //   .text("Selected: " + d.label)
@@ -183,28 +186,28 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     //   .attr("dx", 14)
 
     //extract node's id and ids of its neighbors
-    var id = d.id
-      // @ts-ignore
-      , neighborS = neighborSource[id]
-      // @ts-ignore
-      , neighborT = neighborTarget[id];
-    console.log("neighbors is from ", neighborS, " to ", neighborT);
-    d3.selectAll("#circle" + id).style("stroke-opacity", newOpacity);
-    d3.selectAll("#circle" + id).style("stroke", newStroke);
+    // var id = d.id
+    //   // @ts-ignore
+    //   , neighborS = neighborSource[id]
+    //   // @ts-ignore
+    //   , neighborT = neighborTarget[id];
+    // console.log("neighbors is from ", neighborS, " to ", neighborT);
+    // d3.selectAll("#circle" + id).style("stroke-opacity", newOpacity);
+    // d3.selectAll("#circle" + id).style("stroke", newStroke);
 
-    // d3.selectAll("#subgraph").style("opacity", subgraphOpacity)
+    // // d3.selectAll("#subgraph").style("opacity", subgraphOpacity)
 
-    //highlight the current node and its neighbors
-    for (var i = 0; i < neighborS.length; i++) {
-      d3.selectAll("#line" + neighborS[i] + id).style("stroke", newStrokeIn);
-      d3.selectAll("#circle" + neighborS[i]).style("stroke-opacity", newOpacity).style("stroke", newStrokeIn);
-    }
-    for (var i = 0; i < neighborT.length; i++) {
-      d3.selectAll("#line" + id + neighborT[i]).style("stroke", newStrokeOut);
-      d3.selectAll("#circle" + neighborT[i]).style("stroke-opacity", newOpacity).style("stroke", newStrokeOut);
-    }
-    //update whether or not the node is active
-    d.active = active;
+    // //highlight the current node and its neighbors
+    // for (var i = 0; i < neighborS.length; i++) {
+    //   d3.selectAll("#line" + neighborS[i] + id).style("stroke", newStrokeIn);
+    //   d3.selectAll("#circle" + neighborS[i]).style("stroke-opacity", newOpacity).style("stroke", newStrokeIn);
+    // }
+    // for (var i = 0; i < neighborT.length; i++) {
+    //   d3.selectAll("#line" + id + neighborT[i]).style("stroke", newStrokeOut);
+    //   d3.selectAll("#circle" + neighborT[i]).style("stroke-opacity", newOpacity).style("stroke", newStrokeOut);
+    // }
+    // //update whether or not the node is active
+    // d.active = active;
   })
 
   //create a simulation for an array of nodes, and compose the desired forces.
@@ -212,10 +215,11 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     .force("link", d3.forceLink() // This force provides links between nodes
       // @ts-ignore  
       .id(d => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
-      .distance(120)
+      .distance(100) // This sets the link distance to the specified function. If not specified, will use the default distance calculation.
     )
     .force("charge", d3.forceManyBody().strength(-700)) // This adds repulsion (if it's negative) between nodes. 
-    .force("center", d3.forceCenter(WIDTH / 2, HEIGHT / 2)); // This force attracts nodes to the center of the svg area
+    .force("center", d3.forceCenter(MARGIN.LEFT, HEIGHT / 2)) // This force attracts nodes to the center of the svg area
+    .force("collide", d3.forceCollide().radius((d: any) => radiusScale(d.size) + 20));
 
   //Listen for tick events to render the nodes as they update in your Canvas or SVG.
   simulation
