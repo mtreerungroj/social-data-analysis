@@ -148,7 +148,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   node.append("text")
     .attr('text-anchor', 'middle')
     .attr('alignment-baseline', 'middle')
-    // .attr('font-size', (d: any) => d.size > 100 ? '16px' : '8px')
+    .attr("pointer-events", "none")
     .text((d: any) => d.id)
     .style("font-size", 1)
     .each(getSize)
