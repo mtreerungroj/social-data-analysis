@@ -144,7 +144,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     .style("fill", (d: any) => d.id === focusHashtag ? "#FFC300" : colorScale(Number(d.size)))
 
   node.append("title")
-    .text((d: any) => "Hashtag: " + d.id + "  Add more node detail here...");
+    .text((d: any) => "Hashtag: " + d.id + "\nTotal posts: " + d.size);
 
   node.append("text")
     .attr('text-anchor', 'middle')
