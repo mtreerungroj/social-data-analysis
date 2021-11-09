@@ -24,9 +24,17 @@ export const NetworkGraph = () => {
 const drawNetworkGraph = (hashtagRelation: any) => {
   const dataset = hashtagRelation
 
-  // const colorScale = d3.scaleOrdinal() //=d3.scaleOrdinal(d3.schemeSet2)
-  //   .domain(["Team A", "Team B", "Team C", "Team D", "Team E"])
-  //   .range(['#ff9e6d', '#86cbff', '#c2e5a0', '#fff686', '#9e79db'])
+  const colorScale = d3.scaleLinear() //=d3.scaleOrdinal(d3.schemeSet2)
+    // @ts-ignore
+    .domain(d3.extent(dataset.nodes, (d: any) => Number(d.size)))
+    // @ts-ignore
+    .range(['red', 'blue'])
+  // console.log('colorScale', colorScale(10))
+
+  const radiusScale = d3.scaleLinear()
+    // @ts-ignore
+    .domain(d3.extent(dataset.nodes, (d: any) => Number(d.size)))
+    .range([20, 50])
 
   const svg = d3.select("#network-graph-area")
     .append("svg")
@@ -129,12 +137,12 @@ const drawNetworkGraph = (hashtagRelation: any) => {
 
   // @ts-ignore
   node.append("circle")
-    .attr("r", d => 17)//+ d.runtime/20 )
+    .attr("r", (d: any) => radiusScale(d.size))
     .attr("id", (d: any) => "circle" + d.id)
     .style("stroke", "grey")
     .style("stroke-opacity", 0.3)
     .style("stroke-width", (d: any) => d.runtime / 10)
-  // .style("fill", d => colorScale(d.group))
+    .style("fill", (d: any) => colorScale(Number(d.size)))
 
   node.append("title")
     .text((d: any) => d.id + ": " + d.label + " - " + d.group + ", runtime:" + d.runtime + "min");
