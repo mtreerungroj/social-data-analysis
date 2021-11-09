@@ -22,11 +22,11 @@ export const NetworkGraph = () => {
 }
 
 const drawNetworkGraph = (hashtagRelation: any) => {
-  const data = hashtagRelation
+  const dataset = hashtagRelation
 
-  const colorScale = d3.scaleOrdinal() //=d3.scaleOrdinal(d3.schemeSet2)
-    .domain(["Team A", "Team B", "Team C", "Team D", "Team E"])
-    .range(['#ff9e6d', '#86cbff', '#c2e5a0', '#fff686', '#9e79db'])
+  // const colorScale = d3.scaleOrdinal() //=d3.scaleOrdinal(d3.schemeSet2)
+  //   .domain(["Team A", "Team B", "Team C", "Team D", "Team E"])
+  //   .range(['#ff9e6d', '#86cbff', '#c2e5a0', '#fff686', '#9e79db'])
 
   const svg = d3.select("#network-graph-area")
     .append("svg")
@@ -68,58 +68,6 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .attr("x", WIDTH / 2)
     .style("font-size", "20px")
 
-  //create some data
-  const dataset = {
-    nodes: [
-      { id: 1, name: 'AGGR', label: 'Aggregation', group: 'Team C', runtime: 20 },
-      { id: 2, name: 'ASMT', label: 'Assessment Repository', group: 'Team A', runtime: 60 },
-      { id: 3, name: 'CALC', label: 'Final Calc', group: 'Team C', runtime: 30 },
-      { id: 4, name: 'DEMO', label: 'Demographic', group: 'Team B', runtime: 40 },
-      { id: 5, name: 'ELIG', label: 'Eligibility', group: 'Team B', runtime: 20 },
-      { id: 6, name: 'GOAL', label: 'Goal Setting', group: 'Team C', runtime: 60 },
-      { id: 7, name: 'GROW', label: 'Growth Model', group: 'Team C', runtime: 60 },
-      { id: 8, name: 'LINK', label: 'Linkage', group: 'Team A', runtime: 100 },
-      { id: 9, name: 'MOSL', label: 'MOSL', group: 'Team A', runtime: 80 },
-      { id: 10, name: 'MOTP', label: 'MOTP', group: 'Team A', runtime: 20 },
-      { id: 11, name: 'REPT', label: 'Reporting', group: 'Team E', runtime: 240 },
-      { id: 12, name: 'SEDD', label: 'State Data', group: 'Team A', runtime: 30 },
-      { id: 13, name: 'SNAP', label: 'Snapshot', group: 'Team A', runtime: 40 }
-    ],
-    links: [
-      { source: 1, target: 3, type: 'Next -->>' },
-      { source: 6, target: 1, type: 'Next -->>' },
-      { source: 7, target: 1, type: 'Next -->>' },
-      { source: 9, target: 1, type: 'Next -->>' },
-      { source: 2, target: 4, type: 'Next -->>' },
-      { source: 2, target: 6, type: 'Next -->>' },
-      { source: 2, target: 7, type: 'Next -->>' },
-      { source: 2, target: 8, type: 'Next -->>' },
-      { source: 2, target: 9, type: 'Next -->>' },
-      { source: 10, target: 3, type: 'Next -->>' },
-      { source: 3, target: 11, type: 'Next -->>' },
-      { source: 8, target: 5, type: 'Go to ->>' },
-      { source: 8, target: 11, type: 'Go to ->>' },
-      { source: 6, target: 9, type: 'Go to ->>' },
-      { source: 7, target: 9, type: 'Go to ->>' },
-      { source: 8, target: 9, type: 'Go to ->>' },
-      { source: 9, target: 11, type: 'Go to ->>' },
-      { source: 12, target: 9, type: 'Go to ->>' },
-      { source: 13, target: 11, type: 'Go to ->>' },
-      { source: 13, target: 2, type: 'Go to ->>' },
-      { source: 13, target: 4, type: 'This way>>' },
-      { source: 13, target: 5, type: 'This way>>' },
-      { source: 13, target: 8, type: 'This way>>' },
-      { source: 13, target: 9, type: 'This way>>' },
-      { source: 13, target: 10, type: 'This way>>' },
-      { source: 4, target: 7, type: 'Next -->>' },
-      { source: 10, target: 5, type: 'Next -->>' },
-      { source: 4, target: 2, type: 'Next -->>' },
-      { source: 5, target: 3, type: 'Next -->>' }
-    ]
-  };
-
-  console.log("dataset is ...", dataset);
-
   // Initialize the links
   const link = svg.selectAll(".links")
     .data(dataset.links)
@@ -129,15 +77,15 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .attr("stroke", "#999")
     .attr("stroke-width", "2px")
     .style("opacity", 0.8)
-    .attr("id", d => "line" + d.source + d.target)
+    .attr("id", (d: any) => "line" + d.source + d.target)
     .attr("class", "links")
     .attr('marker-end', 'url(#arrowhead)') //The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given shape.
 
 
   //The <title> element provides an accessible, short-text description of any SVG container element or graphics element.
   //Text in a <title> element is not rendered as part of the graphic, but browsers usually display it as a tooltip.
-  link.append("title")
-    .text(d => d.type);
+  // link.append("title")
+  //   .text(d => d.type);
 
   const edgepaths = svg.selectAll(".edgepath") //make path go along with the link provide position for link labels
     .data(dataset.links)
@@ -164,7 +112,7 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .style("text-anchor", "middle")
     .style("pointer-events", "none")
     .attr("startOffset", "50%")
-    .text(d => d.type);
+    .text((d: any) => d.value);
 
   // Initialize the nodes
   const node = svg.selectAll(".nodes")
@@ -182,23 +130,23 @@ const drawNetworkGraph = (hashtagRelation: any) => {
   // @ts-ignore
   node.append("circle")
     .attr("r", d => 17)//+ d.runtime/20 )
-    .attr("id", d => "circle" + d.id)
+    .attr("id", (d: any) => "circle" + d.id)
     .style("stroke", "grey")
     .style("stroke-opacity", 0.3)
-    .style("stroke-width", d => d.runtime / 10)
-    .style("fill", d => colorScale(d.group))
+    .style("stroke-width", (d: any) => d.runtime / 10)
+  // .style("fill", d => colorScale(d.group))
 
   node.append("title")
-    .text(d => d.id + ": " + d.label + " - " + d.group + ", runtime:" + d.runtime + "min");
+    .text((d: any) => d.id + ": " + d.label + " - " + d.group + ", runtime:" + d.runtime + "min");
 
   node.append("text")
     .attr("dy", 4)
     .attr("dx", -15)
-    .text(d => d.name);
+    .text((d: any) => d.name);
   node.append("text")
     .attr("dy", 12)
     .attr("dx", -8)
-    .text(d => d.runtime);
+    .text((d: any) => d.runtime);
 
   //set up dictionary of neighbors
   var neighborTarget = {};
@@ -217,7 +165,7 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     // @ts-ignore
     neighborSource[id] = dataset.links.filter(function (d) {
       return d.target == id;
-    }).map(function (d) {
+    }).map(function (d: any) {
       return d.source;
     })
   }
@@ -323,7 +271,7 @@ const drawNetworkGraph = (hashtagRelation: any) => {
 
   //drawing the legend
   const legend_g = svg.selectAll(".legend")
-    .data(colorScale.domain())
+    // .data(colorScale.domain())
     .enter().append("g")
     .attr("transform", (d, i) => `translate(${WIDTH},${i * 20})`);
 
@@ -331,13 +279,13 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .attr("cx", 0)
     .attr("cy", 0)
     .attr("r", 5)
-    // @ts-ignore
-    .attr("fill", colorScale);
+  // @ts-ignore
+  // .attr("fill", colorScale);
 
   legend_g.append("text")
     .attr("x", 10)
     .attr("y", 5)
-    .text(d => d);
+    .text((d: any) => d);
 
   //drawing the second legend
   const legend_g2 = svg.append("g")
