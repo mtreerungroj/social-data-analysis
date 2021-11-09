@@ -13,7 +13,7 @@ const keyssel = ["facebook", "twitter", "instagram", "youtube"]
 
 export const NetworkGraph = () => {
   useEffect(() => {
-    drawNetworkGraph(hashtagRelation)
+    drawNetworkGraph(hashtagRelation, '#Eucerin')
   }, [])
 
   return <div>
@@ -21,15 +21,14 @@ export const NetworkGraph = () => {
   </div>
 }
 
-const drawNetworkGraph = (hashtagRelation: any) => {
+const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   const dataset = hashtagRelation
 
-  const colorScale = d3.scaleLinear() //=d3.scaleOrdinal(d3.schemeSet2)
+  const colorScale = d3.scaleLinear()
     // @ts-ignore
     .domain(d3.extent(dataset.nodes, (d: any) => Number(d.size)))
     // @ts-ignore
     .range(['#daf0ff', '#45b6fe'])
-  // console.log('colorScale', colorScale(10))
 
   const radiusScale = d3.scaleLinear()
     // @ts-ignore
@@ -71,7 +70,7 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .style('stroke', 'none');
 
   // svg.append("text")
-  //   .text("Robot Components")
+  //   .text(focusHashtag)
   //   .attr("text-anchor", "middle")
   //   .attr("x", WIDTH / 2)
   //   .style("font-size", "20px")
@@ -142,13 +141,7 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .style("stroke", "grey")
     .style("stroke-opacity", 0.3)
     .style("stroke-width", (d: any) => d.runtime / 10)
-    .style("fill", (d: any) => {
-      if (d.id === "#Eucerin") {
-        return "#FFC300"
-      } else {
-        return colorScale(Number(d.size))
-      }
-    })
+    .style("fill", (d: any) => d.id === focusHashtag ? "#FFC300" : colorScale(Number(d.size)))
 
   node.append("title")
     .text((d: any) => "Hashtag: " + d.id + "  Add more node detail here...");
