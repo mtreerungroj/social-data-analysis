@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 // Released under the ISC license.
 // https://observablehq.com/@d3/color-legend
 export function Legend(dataset, {
-  title,
+  title = 'จำนวนโพสต์',
   tickSize = 6,
   width = 320,
   height = 44 + tickSize,
