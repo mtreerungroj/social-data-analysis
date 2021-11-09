@@ -4,7 +4,7 @@ import hashtagRelation from '../data/hashtagRelation.json'
 
 console.log('hashtagRelation', hashtagRelation)
 
-const MARGIN = ({ TOP: 30, RIGHT: 100, BOTTOM: 0, LEFT: 100 })
+const MARGIN = ({ TOP: 0, RIGHT: 100, BOTTOM: 0, LEFT: 0 })
 const HEIGHT = 500
 const WIDTH = 600
 const sortBy = 'hashtag'
@@ -42,15 +42,15 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     .append("g")
     .attr("transform", `translate(${MARGIN.LEFT},${MARGIN.TOP})`);
 
-  const subgraphWidth = WIDTH * 2 / 8;
-  const subgraphHeight = HEIGHT * 1 / 5;
+  // const subgraphWidth = WIDTH * 2 / 8;
+  // const subgraphHeight = HEIGHT * 1 / 5;
 
-  const subgraph = svg.append("g")
-    .attr("id", "subgraph")
-    .attr("transform", `translate(${WIDTH - subgraphWidth - 20}, 0)`);
+  // const subgraph = svg.append("g")
+  //   .attr("id", "subgraph")
+  //   .attr("transform", `translate(${WIDTH - subgraphWidth - 20}, 0)`);
 
-  subgraph.append("text")
-    .style("font-size", "16px")
+  // subgraph.append("text")
+  //   .style("font-size", "16px")
 
   //appending little triangles, path object, as arrowhead
   //The <defs> element is used to store graphical objects that will be used at a later time
@@ -138,9 +138,9 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   node.append("circle")
     .attr("r", (d: any) => radiusScale(d.size))
     .attr("id", (d: any) => "circle" + d.id)
-    .style("stroke", "grey")
-    .style("stroke-opacity", 0.3)
-    .style("stroke-width", (d: any) => d.runtime / 10)
+    // .style("stroke", "grey")
+    // .style("stroke-opacity", 0.3)
+    // .style("stroke-width", (d: any) => d.runtime / 10)
     .style("fill", (d: any) => d.id === focusHashtag ? "#FFC300" : colorScale(Number(d.size)))
 
   node.append("title")
@@ -156,25 +156,18 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   for (var i = 0; i < dataset.nodes.length; i++) {
     var id = dataset.nodes[i].id;
     // @ts-ignore
-    // eslint-disable-next-line no-loop-func
-    neighborTarget[id] = dataset.links.filter(d => d.source === id).map(function (d) {
-      return d.target;
-    })
+    neighborTarget[id] = dataset.links.filter(d => d.source === id).map(d => d.target)
   }
 
   var neighborSource = {};
   for (var i = 0; i < dataset.nodes.length; i++) {
     var id = dataset.nodes[i].id;
     // @ts-ignore
-    neighborSource[id] = dataset.links.filter(function (d) {
-      return d.target == id;
-    }).map(function (d: any) {
-      return d.source;
-    })
+    neighborSource[id] = dataset.links.filter(d => d.target == id).map(d => d.source)
   }
 
-  console.log("neighborSource is ", neighborSource);
-  console.log("neighborTarget is ", neighborTarget);
+  // console.log("neighborSource is ", neighborSource);
+  // console.log("neighborTarget is ", neighborTarget);
 
   node.selectAll("circle").on("click", function (d) {
 
@@ -185,10 +178,10 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
       , newOpacity = active ? 0.6 : 0.3
       , subgraphOpacity = active ? 0.9 : 0;
 
-    subgraph.selectAll("text")
-      .text("Selected: " + d.label)
-      .attr("dy", 14)
-      .attr("dx", 14)
+    // subgraph.selectAll("text")
+    //   .text("Selected: " + d.label)
+    //   .attr("dy", 14)
+    //   .attr("dx", 14)
 
     //extract node's id and ids of its neighbors
     var id = d.id
@@ -200,7 +193,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     d3.selectAll("#circle" + id).style("stroke-opacity", newOpacity);
     d3.selectAll("#circle" + id).style("stroke", newStroke);
 
-    d3.selectAll("#subgraph").style("opacity", subgraphOpacity)
+    // d3.selectAll("#subgraph").style("opacity", subgraphOpacity)
 
     //highlight the current node and its neighbors
     for (var i = 0; i < neighborS.length; i++) {
