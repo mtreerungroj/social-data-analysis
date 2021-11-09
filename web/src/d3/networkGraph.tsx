@@ -151,16 +151,12 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     })
 
   node.append("title")
-    .text((d: any) => d.id + ": " + d.label + " - " + d.group + ", runtime:" + d.runtime + "min");
+    .text((d: any) => "Hashtag: " + d.id + "  Add more node detail here...");
 
   node.append("text")
-    .attr("dy", 4)
-    .attr("dx", -15)
+    .attr('text-anchor', 'middle')
+    .attr('alignment-baseline', 'middle')
     .text((d: any) => d.id);
-  // node.append("text")
-  //   .attr("dy", 12)
-  //   .attr("dx", -8)
-  //   .text((d: any) => d.runtime);
 
   //set up dictionary of neighbors
   var neighborTarget = {};
