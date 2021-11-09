@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
 import top10HashtagList from '../data/top10HashtagList.json'
-import { Legend } from './Legend'
+import { Legend } from './StackBarLegend'
 
 console.log('top10HashtagList', top10HashtagList)
 
