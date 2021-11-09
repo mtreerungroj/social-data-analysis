@@ -1,26 +1,25 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
 import hashtagRelation from '../data/hashtagRelation.json'
+import { Legend } from './NetworkLegend'
 
 console.log('hashtagRelation', hashtagRelation)
 
 const MARGIN = ({ TOP: 0, RIGHT: 100, BOTTOM: 0, LEFT: 0 })
 const HEIGHT = 500
 const WIDTH = 600
-const sortBy = 'hashtag'
-const keys = ["facebook", "twitter", "instagram", "youtube"]
-const keyssel = ["facebook", "twitter", "instagram", "youtube"]
 
 export const NetworkGraph = () => {
   useEffect(() => {
     drawNetworkGraph(hashtagRelation, '#Eucerin')
+    Legend(hashtagRelation)
   }, [])
 
   return <div>
+    <div id="network-graph-legend"></div>
     <div id="network-graph-area"></div>
   </div>
 }
-
 const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   const dataset = hashtagRelation
 
@@ -28,7 +27,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     // @ts-ignore
     .domain(d3.extent(dataset.nodes, (d: any) => Number(d.size)))
     // @ts-ignore
-    .range(['#daf0ff', '#45b6fe'])
+    .range(['#daf0ff', '#1167b1'])// 45b6fe
 
   const radiusScale = d3.scaleLinear()
     // @ts-ignore
