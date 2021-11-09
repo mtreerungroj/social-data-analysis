@@ -28,7 +28,7 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     // @ts-ignore
     .domain(d3.extent(dataset.nodes, (d: any) => Number(d.size)))
     // @ts-ignore
-    .range(['red', 'blue'])
+    .range(['#daf0ff', '#45b6fe'])
   // console.log('colorScale', colorScale(10))
 
   const radiusScale = d3.scaleLinear()
@@ -112,7 +112,7 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .style("pointer-events", "none")
     .attr('class', 'edgelabel')
     .attr('id', function (d, i) { return 'edgelabel' + i })
-    .attr('font-size', 10)
+    .attr('font-size', 14)
     .attr('fill', '#aaa');
 
   edgelabels.append('textPath') //To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element.
@@ -142,7 +142,13 @@ const drawNetworkGraph = (hashtagRelation: any) => {
     .style("stroke", "grey")
     .style("stroke-opacity", 0.3)
     .style("stroke-width", (d: any) => d.runtime / 10)
-    .style("fill", (d: any) => colorScale(Number(d.size)))
+    .style("fill", (d: any) => {
+      if (d.id === "#Eucerin") {
+        return "#FFC300"
+      } else {
+        return colorScale(Number(d.size))
+      }
+    })
 
   node.append("title")
     .text((d: any) => d.id + ": " + d.label + " - " + d.group + ", runtime:" + d.runtime + "min");
