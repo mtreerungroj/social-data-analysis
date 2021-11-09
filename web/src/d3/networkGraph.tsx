@@ -149,7 +149,19 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     .attr('text-anchor', 'middle')
     .attr('alignment-baseline', 'middle')
     // .attr('font-size', (d: any) => d.size > 100 ? '16px' : '8px')
-    .text((d: any) => d.id);
+    .text((d: any) => d.id)
+    .style("font-size", 1)
+    .each(getSize)
+    .style("font-size", (d: any) => d.scale + "px")
+
+  function getSize(d: any) {
+    // @ts-ignore
+    var bbox = this.getBBox(),
+      // @ts-ignore
+      cbbox = this.parentNode.getBBox(),
+      scale = Math.min(cbbox.width / bbox.width, cbbox.height / bbox.height);
+    d.scale = scale * 0.8;
+  }
 
   //set up dictionary of neighbors
   var neighborTarget = {};
