@@ -29,11 +29,12 @@ export const fetchHashtagRelationshipData = async (focusHashtag: IHashtagItem) =
       nodeB: e.hashtagB,
       value: e.total_posts
     })))
+
   return hashtagRelationshipData
 }
 
 // const getHashtagOverviewDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagOverallData"
-const getHashtagOverviewDataPATH = "data/hashtagRelationship_stock.json"
+const getHashtagOverviewDataPATH = "data/hashtagOverviewData.json"
 
 export const fetchHashtagOverviewData = async (hashtagList: string[]) => {
   const path = getHashtagOverviewDataPATH
