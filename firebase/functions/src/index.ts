@@ -22,8 +22,9 @@ export const getHashtagList = onRequestCORS(async (request, response) => {
 
 
 export const getHashtagOverallData = onRequestCORS(async (request, response) => {
-  const hashtagList: string[] = request.body.hashtagList
-  const hashtagString = hashtagList.map(hashtag => "'" + hashtag + "'").join(',')
+  const json = JSON.parse(request.body)
+  const { hashtagList } = json
+  const hashtagString = hashtagList.map((hashtag: string) => "'" + hashtag + "'").join(',')
   const query = `SELECT hashtag, total_posts, total_engagements FROM ${BQ_PROJECT_ID}.${BQ_DATASET_ID}.${BG_TABLE_HASHTAG_POST_ENGAGEMENT} WHERE hashtag in (${hashtagString})`;
   const res = await _query(query);
 

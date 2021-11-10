@@ -41,18 +41,11 @@ export const fetchHashtagOverviewData = async (hashtagList: string[]) => {
   const path = getHashtagOverviewDataPATH
   const hashtagOverviewData = await fetch(path, {
     method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
     body: JSON.stringify({
       hashtagList: hashtagList
     })
   })
-  // .then(res => {
-  //   console.log('res', res.text())
-  //   return res.json()
-  // }).then(data => data)
+    .then(res => res.json())
   console.log('hashtagOverviewData', hashtagOverviewData)
   return hashtagOverviewData
 }
