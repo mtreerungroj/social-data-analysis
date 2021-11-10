@@ -35,8 +35,6 @@ const getHashtagOverviewDataPATH = "http://localhost:5002/social-data-analysis-v
 // const getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
 
 export const fetchHashtagOverviewData = async (hashtagList: string[]) => {
-  console.log('fetchHashtagOverviewData', hashtagList)
-
   // const path = getHashtagOverviewDataPATH + focusHashtag.label.substring(1)
   const path = getHashtagOverviewDataPATH
   const hashtagOverviewData = await fetch(path, {
@@ -44,8 +42,6 @@ export const fetchHashtagOverviewData = async (hashtagList: string[]) => {
     body: JSON.stringify({
       hashtagList: hashtagList
     })
-  })
-    .then(res => res.json())
-  console.log('hashtagOverviewData', hashtagOverviewData)
+  }).then(res => res.json())
   return hashtagOverviewData
 }
