@@ -14,12 +14,13 @@ export const fetchHashtagListData = async () => {
   return hashtagListData
 }
 
-const getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
-// const getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
+// const getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
+const getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
 
 export const fetchHashtagRelationshipData = async (focusHashtag: IHashtagItem) => {
-  const path = getHashtagRelationshipPATH + focusHashtag.label.substring(1)
-  // const path = getHashtagRelationshipPATH
+  // const path = getHashtagRelationshipPATH + focusHashtag.label.substring(1)
+  const path = getHashtagRelationshipPATH
+
   const hashtagRelationshipData = await fetch(path)
     .then(res => res.json())
     .then(data => data.map((e: any, i: Number) => ({
@@ -31,17 +32,20 @@ export const fetchHashtagRelationshipData = async (focusHashtag: IHashtagItem) =
   return hashtagRelationshipData
 }
 
-const getHashtagOverviewDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagOverallData"
-// const getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
+// const getHashtagOverviewDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagOverallData"
+const getHashtagOverviewDataPATH = "data/hashtagRelationship_stock.json"
 
 export const fetchHashtagOverviewData = async (hashtagList: string[]) => {
-  // const path = getHashtagOverviewDataPATH + focusHashtag.label.substring(1)
   const path = getHashtagOverviewDataPATH
-  const hashtagOverviewData = await fetch(path, {
-    method: 'POST',
-    body: JSON.stringify({
-      hashtagList: hashtagList
-    })
-  }).then(res => res.json())
+
+  // const hashtagOverviewData = await fetch(path, {
+  //   method: 'POST',
+  //   body: JSON.stringify({
+  //     hashtagList: hashtagList
+  //   })
+  // }).then(res => res.json())
+
+  const hashtagOverviewData = await fetch(path)
+    .then(res => res.json())
   return hashtagOverviewData
 }
