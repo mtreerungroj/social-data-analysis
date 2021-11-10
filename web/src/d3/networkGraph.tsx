@@ -5,22 +5,23 @@ import { Legend } from './NetworkLegend'
 
 console.log('hashtagRelation', hashtagRelation)
 
-const MARGIN = ({ TOP: 0, RIGHT: 100, BOTTOM: 0, LEFT: 0 })
-const HEIGHT = 500
+const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
+const HEIGHT = 600
 const WIDTH = 600
 
-export const NetworkGraph = () => {
+export const NetworkGraph = (focusHashtag: any, setFocusHashtagNode: any) => {
   useEffect(() => {
-    drawNetworkGraph(hashtagRelation, '#Eucerin')
+    console.log('[NetworkGraph] focusHashtag', focusHashtag)
+    drawNetworkGraph(hashtagRelation, '#Eucerin', setFocusHashtagNode)
     Legend(hashtagRelation)
-  }, [])
+  }, [focusHashtag, setFocusHashtagNode])
 
   return <div>
     <div id="network-graph-legend"></div>
     <div id="network-graph-area"></div>
   </div>
 }
-const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
+const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string, setFocusHashtagNode: any) => {
   const dataset = hashtagRelation
 
   const colorScale = d3.scaleLinear()
@@ -34,12 +35,13 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     .domain(d3.extent(dataset.nodes, (d: any) => Number(d.size)))
     .range([20, 50])
 
+  d3.select("#network-graph-area").selectAll("svg").remove()
   const svg = d3.select("#network-graph-area")
     .append("svg")
     .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
     .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
     .append("g")
-    .attr("transform", `translate(${MARGIN.LEFT},${MARGIN.TOP})`);
+  // .attr("transform", `translate(${MARGIN.LEFT},${MARGIN.TOP})`);
 
   // const subgraphWidth = WIDTH * 2 / 8;
   // const subgraphHeight = HEIGHT * 1 / 5;
@@ -54,19 +56,19 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   //appending little triangles, path object, as arrowhead
   //The <defs> element is used to store graphical objects that will be used at a later time
   //The <marker> element defines the graphic that is to be used for drawing arrowheads or polymarkers on a given <path>, <line>, <polyline> or <polygon> element.
-  svg.append('defs').append('marker')
-    .attr("id", 'arrowhead')
-    .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
-    .attr('refX', 24) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
-    .attr('refY', 0)
-    .attr('orient', 'auto')
-    .attr('markerWidth', 6)
-    .attr('markerHeight', 6)
-    .attr('xoverflow', 'visible')
-    .append('svg:path')
-    .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-    .attr('fill', '#999')
-    .style('stroke', 'none');
+  // svg.append('defs').append('marker')
+  //   .attr("id", 'arrowhead')
+  //   .attr('viewBox', '-0 -5 10 10') //the bound of the SVG viewport for the current SVG fragment. defines a coordinate system 10 wide and 10 high starting on (0,-5)
+  //   .attr('refX', 24) // x coordinate for the reference point of the marker. If circle is bigger, this need to be bigger.
+  //   .attr('refY', 0)
+  //   .attr('orient', 'auto')
+  //   .attr('markerWidth', 6)
+  //   .attr('markerHeight', 6)
+  //   .attr('xoverflow', 'visible')
+  //   .append('svg:path')
+  //   .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+  //   .attr('fill', '#999')
+  //   .style('stroke', 'none');
 
   // svg.append("text")
   //   .text(focusHashtag)
@@ -85,7 +87,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
     .style("opacity", 0.8)
     .attr("id", (d: any) => "line" + d.source + d.target)
     .attr("class", "links")
-    .attr('marker-end', 'url(#arrowhead)') //The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given shape.
+  // .attr('marker-end', 'url(#arrowhead)') //The marker-end attribute defines the arrowhead or polymarker that will be drawn at the final vertex of the given shape.
 
 
   //The <title> element provides an accessible, short-text description of any SVG container element or graphics element.
@@ -185,6 +187,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
 
   node.selectAll("circle").on("click", function (event, d: any) {
     console.log("clicked on ", d.id);
+    setFocusHashtagNode(d.id)
     // var active = d.active ? false : true // toggle whether node is active
     //   , newStroke = active ? "yellow" : "grey"
     //   , newStrokeIn = active ? "green" : "grey"
@@ -223,15 +226,15 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string) => {
   })
 
   //create a simulation for an array of nodes, and compose the desired forces.
-  const simulation = d3.forceSimulation()
+  const simulation = d3.forceSimulation().restart()
     .force("link", d3.forceLink() // This force provides links between nodes
       // @ts-ignore  
       .id(d => d.id) // This sets the node id accessor to the specified function. If not specified, will default to the index of a node.
-      .distance(100) // This sets the link distance to the specified function. If not specified, will use the default distance calculation.
+      .distance(150) // This sets the link distance to the specified function. If not specified, will use the default distance calculation.
     )
-    .force("charge", d3.forceManyBody().strength(-700)) // This adds repulsion (if it's negative) between nodes. 
-    .force("center", d3.forceCenter(MARGIN.LEFT, HEIGHT / 2)) // This force attracts nodes to the center of the svg area
-    .force("collide", d3.forceCollide().radius((d: any) => radiusScale(d.size) + 20));
+    .force("charge", d3.forceManyBody().strength(-500)) // This adds repulsion (if it's negative) between nodes. 
+    .force("center", d3.forceCenter(WIDTH / 2 - 150, HEIGHT / 2 - 75).strength(0.1)) // This force attracts nodes to the center of the svg area
+    .force("collide", d3.forceCollide().radius((d: any) => radiusScale(d.size)));
 
   //Listen for tick events to render the nodes as they update in your Canvas or SVG.
   simulation

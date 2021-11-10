@@ -9,6 +9,7 @@ function App() {
   let [hashtagList, setHashtagList] = useState<IHashtagItem[]>()
   let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
   let [hashtagRelationshipList, setHashtagRelationshipList] = useState<IHashtagRelationshipItem[]>()
+  let [focusHashtagNode, setFocusHashtagNode] = useState()
 
   useEffect(() => {
     fetchHashtagListData().then(data => setHashtagList(data))
@@ -37,7 +38,7 @@ function App() {
           {focusHashtag ?
             <div>
               Show network graph for {focusHashtag.label}
-              <NetworkGraph />
+              <NetworkGraph focusHashtag={focusHashtag.label} setFocusHashtagNode />
             </div> :
             <div>
               No focus hashtag, show top trending hashtag

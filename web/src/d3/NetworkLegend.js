@@ -32,6 +32,7 @@ export function Legend(dataset, {
     return canvas;
   }
 
+  d3.select("#network-graph-legend").selectAll("svg").remove()
   const svg = d3.select("#network-graph-legend").append("svg")
     .attr("width", width)
     .attr("height", height)
