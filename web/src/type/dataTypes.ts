@@ -5,8 +5,17 @@ export interface IHashtagItem {
 }
 
 export interface IHashtagRelationshipItem {
-  id: number,
-  nodeA: string,
-  nodeB: string,
-  value: number,
+  nodes: INode[],
+  links: ILink[]
+}
+
+interface INode {
+  id: string,
+  size: number
+}
+
+interface ILink {
+  source: any,
+  target: any,
+  value: number
 }
