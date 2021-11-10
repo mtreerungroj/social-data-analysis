@@ -38,7 +38,10 @@ function App() {
           {focusHashtag ?
             <div>
               Show network graph for {focusHashtag.label}
-              <NetworkGraph focusHashtag={focusHashtag.label} setFocusHashtagNode />
+              <NetworkGraph focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
+              {focusHashtagNode ?
+                <div> Show spike graph for {focusHashtagNode}</div> :
+                <div> Wait for clicking node</div>}
             </div> :
             <div>
               No focus hashtag, show top trending hashtag

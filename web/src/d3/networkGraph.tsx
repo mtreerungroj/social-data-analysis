@@ -9,7 +9,15 @@ const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
 const HEIGHT = 600
 const WIDTH = 600
 
-export const NetworkGraph = (focusHashtag: any, setFocusHashtagNode: any) => {
+interface INetworkGraphProps {
+  // hashtagRelationList: IHashtagRelationItem[],
+  focusHashtag: string,
+  setFocusHashtagNode: (arg0: any) => void
+}
+
+export const NetworkGraph = (props: INetworkGraphProps) => {
+  const { focusHashtag, setFocusHashtagNode } = props
+
   useEffect(() => {
     console.log('[NetworkGraph] focusHashtag', focusHashtag)
     drawNetworkGraph(hashtagRelation, '#Eucerin', setFocusHashtagNode)
@@ -179,7 +187,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string, setFocusHa
     var id = dataset.nodes[i].id;
     // @ts-ignore
     // eslint-disable-next-line no-loop-func
-    neighborSource[id] = dataset.links.filter(d => d.target == id).map(d => d.source)
+    neighborSource[id] = dataset.links.filter(d => d.target === id).map(d => d.source)
   }
 
   console.log("neighborSource is ", neighborSource);
