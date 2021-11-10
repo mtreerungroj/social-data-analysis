@@ -14,12 +14,12 @@ export const fetchHashtagListData = async () => {
   return hashtagListData
 }
 
-// const getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
-const getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
+const getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
+// const getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
 
 export const fetchHashtagRelationshipData = async (focusHashtag: IHashtagItem) => {
-  // const path = getHashtagRelationshipPATH + focusHashtag.label.substring(1)
-  const path = getHashtagRelationshipPATH
+  const path = getHashtagRelationshipPATH + focusHashtag.label.substring(1)
+  // const path = getHashtagRelationshipPATH
   const hashtagRelationshipData = await fetch(path)
     .then(res => res.json())
     .then(data => data.map((e: any, i: Number) => ({

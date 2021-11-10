@@ -1,9 +1,6 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
-import hashtagRelation from '../data/hashtagRelation.json'
 import { Legend } from './NetworkLegend'
-
-console.log('hashtagRelation', hashtagRelation)
 
 const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
 const HEIGHT = 600
@@ -25,7 +22,7 @@ export const NetworkGraph = (props: INetworkGraphProps) => {
     console.log('[NetworkGraph] focusHashtag', focusHashtag)
     console.log('hashtagRelationshipList', hashtagRelationshipList)
 
-    drawNetworkGraph(hashtagRelationshipList, '#Eucerin', setFocusHashtagNode)
+    drawNetworkGraph(hashtagRelationshipList, focusHashtag, setFocusHashtagNode)
     Legend(hashtagRelationshipList)
   }, [focusHashtag, hashtagRelationshipList, setFocusHashtagNode])
 
@@ -196,8 +193,8 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string, setFocusHa
     neighborSource[id] = dataset.links.filter(d => d.target === id).map(d => d.source)
   }
 
-  console.log("neighborSource is ", neighborSource);
-  console.log("neighborTarget is ", neighborTarget);
+  // console.log("neighborSource is ", neighborSource);
+  // console.log("neighborTarget is ", neighborTarget);
 
   node.selectAll("circle").on("click", function (event, d: any) {
     console.log("clicked on ", d.id);

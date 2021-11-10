@@ -11,7 +11,7 @@ require('./App.css');
 function App() {
   let [hashtagList, setHashtagList] = useState<IHashtagItem[]>()
   let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
-  let [hashtagRelationshipList, setHashtagRelationshipList] = useState<IHashtagRelationshipItem[]>()
+  let [hashtagRelationshipList, setHashtagRelationshipList] = useState<any>()
   let [focusHashtagNode, setFocusHashtagNode] = useState()
 
   useEffect(() => {
@@ -25,22 +25,35 @@ function App() {
   useEffect(() => {
     console.log('focusHashtag, fetching hashtag data...', focusHashtag)
     if (focusHashtag) {
-      fetchHashtagRelationshipData(focusHashtag).then(data => {
+      fetchHashtagRelationshipData(focusHashtag).then(async data => {
         // get top 20 higghest node value
         const topNHashtagRelation = topN(data, 'value', 20)
         if (!topNHashtagRelation) return
+        console.log('topNHashtagRelation', topNHashtagRelation)
 
         // modify data to be compatible with network graph (follow hashtagRelationship_stock.json)
-        const unique_hashtagA = topNHashtagRelation.map((x: any) => x.nodeA)
-        const unique_hashtagB = topNHashtagRelation.map((x: any) => x.nodeB)
-        const unique_hashtag = Array.from(new Set(unique_hashtagA.concat(unique_hashtagB)))
-        console.log('unique_hashtag', unique_hashtag)
+        const uniqueHashtagA = topNHashtagRelation.map((x: any) => x.nodeA)
+        const uniqueHashtagB = topNHashtagRelation.map((x: any) => x.nodeB)
+        const uniqueHashtag = Array.from(new Set(uniqueHashtagA.concat(uniqueHashtagB)))
+        console.log('unique_hashtag', uniqueHashtag)
 
         // fetch hashtag node size
-        fetchHashtagOverviewData(['#0C090A', '#BF4'])//.then(data => { })
+        const hashtagOverviewData = await fetchHashtagOverviewData(uniqueHashtag)
 
-        // check again if topN works
-        setHashtagRelationshipList(data)
+        const nodes = uniqueHashtag.map(hashtag => ({
+          id: hashtag,
+          size: hashtagOverviewData.find((x: any) => x.hashtag === hashtag)?.total_posts || 0,
+        }))
+        const links = topNHashtagRelation.map(x => ({
+          source: x.nodeA,
+          target: x.nodeB,
+          value: x.value
+        }))
+
+        const hashtag_relation = { nodes, links }
+        console.log('hashtag_relation', hashtag_relation)
+
+        setHashtagRelationshipList(hashtag_relation)
       })
     }
   }, [focusHashtag])
