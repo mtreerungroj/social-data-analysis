@@ -25,7 +25,7 @@ export const fetchHashtagRelationshipData = async (focusHashtag: IHashtagItem) =
     .then(data => data.map((e: any, i: Number) => ({
       id: i,
       nodeA: e.hashtagA,
-      nodeb: e.hashtagB,
+      nodeB: e.hashtagB,
       value: e.total_posts
     })))
   return hashtagRelationshipData

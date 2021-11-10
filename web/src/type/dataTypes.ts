@@ -7,6 +7,6 @@ export interface IHashtagItem {
 export interface IHashtagRelationshipItem {
   id: number,
   nodeA: string,
-  nodeb: string,
+  nodeB: string,
   value: number,
 }
