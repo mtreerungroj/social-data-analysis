@@ -4,7 +4,7 @@ import { NetworkGraph } from './d3/networkGraph';
 import { StackedBarChart } from './d3/stackedBarChart';
 import { IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
 import { topN } from './util/arrayUtil';
-import { fetchHashtagListData, fetchHashtagNodeSize, fetchHashtagRelationshipData } from './util/fetchData';
+import { fetchHashtagListData, fetchHashtagOverviewData, fetchHashtagRelationshipData } from './util/fetchData';
 
 require('./App.css');
 
@@ -37,7 +37,7 @@ function App() {
         console.log('unique_hashtag', unique_hashtag)
 
         // fetch hashtag node size
-        fetchHashtagNodeSize(unique_hashtag).then(data => { })
+        fetchHashtagOverviewData(['#0C090A', '#BF4'])//.then(data => { })
 
         // check again if topN works
         setHashtagRelationshipList(data)
