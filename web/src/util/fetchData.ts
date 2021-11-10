@@ -30,3 +30,7 @@ export const fetchHashtagRelationshipData = async (focusHashtag: IHashtagItem) =
     })))
   return hashtagRelationshipData
 }
+
+export const fetchHashtagNodeSize = async (hashtagList: string[]) => {
+  return
+}

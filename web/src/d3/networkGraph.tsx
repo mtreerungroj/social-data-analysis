@@ -11,18 +11,23 @@ const WIDTH = 600
 
 interface INetworkGraphProps {
   // hashtagRelationList: IHashtagRelationItem[],
+  hashtagRelationshipList: any,
   focusHashtag: string,
   setFocusHashtagNode: (arg0: any) => void
 }
 
 export const NetworkGraph = (props: INetworkGraphProps) => {
-  const { focusHashtag, setFocusHashtagNode } = props
+  const { hashtagRelationshipList, focusHashtag, setFocusHashtagNode } = props
 
   useEffect(() => {
+    if (!focusHashtag) return
+    if (!hashtagRelationshipList) return
     console.log('[NetworkGraph] focusHashtag', focusHashtag)
-    drawNetworkGraph(hashtagRelation, '#Eucerin', setFocusHashtagNode)
-    Legend(hashtagRelation)
-  }, [focusHashtag, setFocusHashtagNode])
+    console.log('hashtagRelationshipList', hashtagRelationshipList)
+
+    drawNetworkGraph(hashtagRelationshipList, '#Eucerin', setFocusHashtagNode)
+    Legend(hashtagRelationshipList)
+  }, [focusHashtag, hashtagRelationshipList, setFocusHashtagNode])
 
   return <div>
     <div id="network-graph-legend"></div>
@@ -31,6 +36,7 @@ export const NetworkGraph = (props: INetworkGraphProps) => {
 }
 const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string, setFocusHashtagNode: any) => {
   const dataset = hashtagRelation
+  console.log('[drawNetworkGraph] dataset', dataset)
 
   const colorScale = d3.scaleLinear()
     // @ts-ignore
