@@ -5,6 +5,8 @@ import { StackedBarChart } from './d3/stackedBarChart';
 import { IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
 import { fetchHashtagListData, fetchHashtagRelationshipData } from './util/fetchData';
 
+require('./App.css');
+
 function App() {
   let [hashtagList, setHashtagList] = useState<IHashtagItem[]>()
   let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
@@ -38,10 +40,12 @@ function App() {
           {focusHashtag ?
             <div>
               Show network graph for {focusHashtag.label}
-              <NetworkGraph focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
-              {focusHashtagNode ?
-                <div> Show spike graph for {focusHashtagNode}</div> :
-                <div> Wait for clicking node</div>}
+              <div className="focusHashtag">
+                <NetworkGraph focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
+                {focusHashtagNode ?
+                  <div> Show spike graph for {focusHashtagNode}</div> :
+                  <div> Wait for clicking node</div>}
+              </div>
             </div> :
             <div>
               No focus hashtag, show top trending hashtag
