@@ -73,11 +73,17 @@ function App() {
           {focusHashtag ?
             <div>
               Show network graph for {focusHashtag.label}
-              <div className="focusHashtag">
-                <NetworkGraph hashtagRelationshipList={hashtagRelationshipList} focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
-                {focusHashtagNode ?
-                  <div> Show spike graph for {focusHashtagNode}</div> :
-                  <div> Wait for clicking node</div>}
+              <div>
+                {hashtagRelationshipList ?
+                  <div className="focusHashtag">
+                    <NetworkGraph hashtagRelationshipList={hashtagRelationshipList} focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
+                    {focusHashtagNode ?
+                      <div> Show spike graph for {focusHashtagNode}</div> :
+                      <div> Wait for clicking node</div>
+                    }
+                  </div> :
+                  <div>Loading...</div>
+                }
               </div>
             </div> :
             <div>
