@@ -244,7 +244,7 @@ const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string, setFocusHa
       .distance(150) // This sets the link distance to the specified function. If not specified, will use the default distance calculation.
     )
     .force("charge", d3.forceManyBody().strength(-500)) // This adds repulsion (if it's negative) between nodes. 
-    .force("center", d3.forceCenter(WIDTH / 2 - 150, HEIGHT / 2 - 75).strength(0.1)) // This force attracts nodes to the center of the svg area
+    .force("center", d3.forceCenter(WIDTH / 2, HEIGHT / 2).strength(0.1)) // This force attracts nodes to the center of the svg area
     .force("collide", d3.forceCollide().radius((d: any) => radiusScale(d.size)));
 
   //Listen for tick events to render the nodes as they update in your Canvas or SVG.
