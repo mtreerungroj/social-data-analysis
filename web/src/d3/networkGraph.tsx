@@ -1,5 +1,6 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
+import { IHashtagRelationshipItem } from '../type/dataTypes'
 import { Legend } from './NetworkLegend'
 
 const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
@@ -7,8 +8,7 @@ const HEIGHT = 600
 const WIDTH = 600
 
 interface INetworkGraphProps {
-  // hashtagRelationList: IHashtagRelationItem[],
-  hashtagRelationshipList: any,
+  hashtagRelationshipList: IHashtagRelationshipItem,
   focusHashtag: string,
   setFocusHashtagNode: (arg0: any) => void
 }
@@ -31,7 +31,7 @@ export const NetworkGraph = (props: INetworkGraphProps) => {
     <div id="network-graph-area"></div>
   </div>
 }
-const drawNetworkGraph = (hashtagRelation: any, focusHashtag: string, setFocusHashtagNode: any) => {
+const drawNetworkGraph = (hashtagRelation: IHashtagRelationshipItem, focusHashtag: string, setFocusHashtagNode: any) => {
   const dataset = hashtagRelation
   console.log('[drawNetworkGraph] dataset', dataset)
 
