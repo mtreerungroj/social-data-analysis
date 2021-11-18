@@ -23,14 +23,28 @@ export const EngagementChart = (props: IEngagementChartProps) => {
 
   return <div>
     <div id="stack-bar-chart-legend"></div>
-    <div id="stack-bar-chart-area"></div>
+    <div id="engagement-chart-area"></div>
   </div>
 }
+
+const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 30 })
+const HEIGHT = 600
+const WIDTH = 900
 
 const time_dummy = ["00.00-00.59", "01.00-01.59", "02.00-02.59", "03.00-03.59", "04.00-04.59", "05.00-05.59", "06.00-06.59", "07.00-07.59", "08.00-08.59", "09.00-09.59", "10.00-10.59", "11.00-11.59", "12.00-12.59", "13.00-13.59", "14.00-14.59", "15.00-15.59", "16.00-16.59", "17.00-17.59", "18.00-18.59", "19.00-19.59", "20.00-20.59", "21.00-21.59", "22.00-22.59", "23.00-23.59"]
 const date_dummy = ["1/1/2020", "1/2/2020", "1/3/2020", "1/4/2020", "1/5/2020", "1/6/2020", "1/7/2020", "1/8/2020", "1/9/2020", "1/10/2020", "1/11/2020", "1/12/2020"]
 
-
+const chart_param_init = ({
+  width: WIDTH,
+  ridge_height: 30,
+  margin: {
+    top: 10,
+    right: 25,
+    bottom: 20,
+    left: 100,
+    ridge: 20
+  }
+})
 
 const drawEngagementChart = (hashtagEngagementData: any) => {
   const data_x = hashtagEngagementData
@@ -48,8 +62,6 @@ const drawEngagementChart = (hashtagEngagementData: any) => {
     return a.sort((a, b) => d3.ascending(a.Order, b.Order));
   }
 
-  console.log('data_y', data_y())
-
   // insert dummy date
   const data = () => {
     let c = [...data_y()];
@@ -65,180 +77,174 @@ const drawEngagementChart = (hashtagEngagementData: any) => {
     return c;
   }
 
-  console.log('data data data', data())//.map((d: any) => d.data).flat())
-  // const y = () => d3.scaleLinear()
-  // .domain(d3.extent(data().map((d: any) => d.data).flat(), (d: any) => d.engagement))
-  // .range([chart_param.ridge_height, 0])
+  // after manually setting parameters in chart_param_init, height will be defined based on those params
+  const chart_param = Object.assign(
+    chart_param_init,
+    {
+      height: chart_param_init.margin.top + chart_param_init.margin.bottom +
+        // data.length * chart_param_init.margin.ridge
+        24 * chart_param_init.margin.ridge
+        + chart_param_init.ridge_height
+    })
 
-  // const svg = d3.select("#stack-bar-chart-area").append("svg")
-  //   .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
-  //   .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
-  //   .attr("viewBox", `-80 -20 ${WIDTH + 100} ${HEIGHT + 50}`)
+  const y = d3.scaleLinear()
+    // @ts-ignore
+    .domain(d3.extent(data().map((d: any) => d.data).flat(), (d: any) => d.engagement))
+    .range([chart_param.ridge_height, 0])
 
-  // const x = d3.scaleBand()
-  //   .domain(regions)
-  //   .range([0, WIDTH])
-  //   .padding(0.2);
+  const x = d3.scaleLinear()
+    // @ts-ignore
+    .domain(d3.extent(data().map(d => d.data).flat(), d => d.Month))
+    .range([0, chart_param.width - chart_param.margin.left - chart_param.margin.right])
 
-  // svg.append("g")
-  //   .attr("class", "x axis")
-  //   .attr("transform", "translate(0," + HEIGHT + ")")
-  //   .call(d3.axisBottom(x).tickSizeOuter(0));
+  const color = d3.scaleLinear()
+    // @ts-ignore
+    .domain(d3.extent(data_x, d => d.avg))
+    // .range(["#d65e9b", "#8bb56e"])
+    // @ts-ignore
+    .range(["white", d3.hcl("hsl(207, 44%, 49%)").darker()])
 
-  // // stacked bars
-  // const gStacked = svg.append("g")
-  //   .selectAll("g")
-  //   .data(series)
-  //   .enter()
-  //   .append("g")
-  //   // @ts-ignore
-  //   .attr("fill", (d) => color(d.key))
-  //   .selectAll("rect")
-  //   .data((d) => d)
-  //   .enter()
-  //   .append("rect")
-  //   // @ts-ignore
-  //   .attr("x", (d) => x(d.data.name))
-  //   .attr("y", (d) => y(d[1]))
-  //   .attr("height", (d) => y(d[0]) - y(d[1]))
-  //   .attr("width", x.bandwidth())
-  //   .attr("stroke", "#D0D3D4")
-  //   .attr("class", (d) => {
-  //     // @ts-ignore
-  //     const compositionName = d.key.split(" ").join("-");
-  //     return `stacked-default ${compositionName} region-${d.data.region_id}`
-  //   })
-  //   .on("mouseover", mouseover)
-  //   .on("mouseleave", mouseleave)
+  // a simple line to plot to fill under the ridge (showing true data)
+  const line1 = d3.line()
+    .x((d: any) => x(d.Month))
+    .y((d: any) => y(d.engagement));
 
-  // const gStackedValueText = svg.append("g")
-  //   .selectAll("g")
-  //   .data(series)
-  //   .enter()
-  //   .append("g")
-  //   .selectAll("text")
-  //   .data((d) => d)
-  //   .enter()
-  //   .append("text")
-  //   // @ts-ignore
-  //   .attr("x", (d) => x(d.data.name) + x.bandwidth() / 2)
-  //   .attr("y", (d) => ((y(d[0]) + y(d[1])) / 2) - 20)
-  //   .attr('transform', 'translate(0, 18)')
-  //   .attr("text-anchor", "middle")
-  //   .attr("class", (d) => {
-  //     // @ts-ignore
-  //     const compositionName = d.key.split(" ").join("-");
-  //     return `stacked-text-default ${compositionName} region-${d.data.region_id}`
-  //   })
-  //   .attr("pointer-events", "none")
-  //   .style("font-size", 16)
-  //   .style("font-family", "sans-serif")
-  //   .style("opacity", 0)
-  //   .style("cursor", "default")
-
-  // gStackedValueText.append("tspan")
-  //   // @ts-ignore
-  //   .text((d) => d3.format('.3s')(d.data[d.key]))
-
-  // gStackedValueText.append("tspan")
-  //   // @ts-ignore
-  //   .attr('x', (d) => x(d.data.name) + x.bandwidth() / 2)
-  //   .attr("dy", 16)
-  //   // @ts-ignore
-  //   .text(d => (d.data[d.key] / d.data["all"] * 100).toFixed(2) + "%")
-
-  // gStackedValueText.clone(true)
-  //   .lower()
-  //   .attr("class", (d) => {
-  //     // @ts-ignore
-  //     const compositionName = d.key.split(" ").join("-");
-  //     return `stacked-text-default ${compositionName} region-${d.data.region_id}`
-  //   })
-  //   .attr("aria-hidden", "true")
-  //   .attr("fill", "none")
-  //   .attr("stroke", "white")
-  //   .attr("stroke-width", 3)
-  //   .attr("stroke-linecap", "round")
-  //   .attr("stroke-linejoin", "round")
-  //   .on("mouseover", mouseover)
-  //   .on("mouseleave", mouseleave)
+  // similar to line1, just with curve to enclose data with a smooth ridge
+  const line2 = d3.line()
+    //.curve(d3.curveCardinal)
+    .x((d: any) => x(d.Month))
+    .y((d: any) => y(d.engagement));
 
 
-  // const yTitle = (g: any) => g
-  //   .append("text")
-  //   .attr("transform", "rotate(-90)")
-  //   .attr("x", 0 - HEIGHT / 2)
-  //   .attr("y", 0 - MARGIN.LEFT - 20)
-  //   .attr("class", "axis-label")
-  //   .style("text-anchor", "middle")
-  //   .style("font-size", 18)
-  //   .style("font-family", "sans-serif")
-  //   .text("Number of posts")
+  /*** init svg plot ***/
+  const svg = d3.select("#engagement-chart-area").append("svg")
+    .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
+    .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
+    .attr("viewBox", `-80 -20 ${WIDTH + 100} ${HEIGHT + 50}`)
 
-  // const yAxis = (g: any) => g
-  //   .attr("class", "y axis")
-  //   .attr("transform", `translate(0, 0)`)
-  //   .call(d3.axisLeft(y)
-  //     .ticks(null, "s"))
+  const cp = chart_param;
 
-  // svg.append("g").call(yTitle);
-  // svg.append("g").call(yAxis);
+  /*** draw axis lines + labels ***/
+  // 1. first creating array of information about where to place axis lines
+  const d0 = new Date("01/01/2020");
+  let date_points = [];
+  for (let i = 1; i <= 12; i++) {
+    const d1 = new Date(i + "/01/2020"),
+      month_str = d1.toLocaleDateString("en-US", { month: "long" });
+    date_points.push({
+      month_str: month_str.substring(0, 3) + (month_str.length > 3 ? "." : ""),
+      // @ts-ignore
+      days_into_year: (d1 - d0) / (1000 * 60 * 60 * 24)
+    });
+  }
 
+  // but if chart is quite narrow, just use 3 set axis lines
+  if (chart_param.width <= 750) {
+    date_points = [
+      { month_str: "Jan. 1", days_into_year: 0 },
+      { month_str: "Jun. 31", days_into_year: 182 },
+      { month_str: "Dec. 30", days_into_year: 364 }
+    ]
+  }
 
-  // // composition legends
-  // const gLegendX = WIDTH - 100;
-  // const gLegendY = 100;
-  // const gLegendRect = svg.append("g")
-  //   .selectAll("regionLegendRect")
-  //   .data(compositionNames)
-  //   .enter()
-  //   .append("rect")
-  //   .attr("x", gLegendX)
-  //   .attr("y", (d, i) => gLegendY - i * (25))
-  //   .attr("width", 15)
-  //   .attr("height", 15)
-  //   .attr("class", (d, i) => "stacked-default " + compositionNames[i].split(" ").join("-"))
-  //   .style("fill", (d, i) => colorCodes[i])
+  // 2. draw axis groups
+  const x_date = d3.scaleLinear()
+    .domain([0, 364])
+    .range(x.range());
+  const ag = svg.selectAll("g.axis_group")
+    .data(date_points).enter()
+    .append("g")
+    .classed("axis_group", true)
+    .attr("transform", d => `translate(${cp.margin.left + x_date(d.days_into_year)}, ${cp.margin.top})`);
 
-  // const gLegendLabel = svg.append("g")
-  //   .selectAll("regionLegendLabel")
-  //   .data(compositionNames)
-  //   .enter()
-  //   .append("text")
-  //   .attr("x", gLegendX + 20)
-  //   .attr("y", (d, i) => gLegendY + 8 - i * (25))
-  //   .attr("text-anchor", "left")
-  //   .attr("class", (d, i) => "stacked-default " + compositionNames[i].split(" ").join("-"))
-  //   .style("cursor", "default")
-  //   .style("fill", (d, i) => colorCodes[i])
-  //   .style("alignment-baseline", "middle")
-  //   .style("font-size", 16)
-  //   .style("font-family", "sans-serif")
-  //   .text((d, i) => compositionNames[i])
+  // 3. draw axis lines
+  ag.append("line")
+    .classed("axis_line", true)
+    .attr("x1", 0)
+    .attr("y1", 0)
+    .attr("x2", 0)
+    .attr("y2", cp.height - cp.margin.top - cp.margin.bottom)
+    .style("stroke", "#c9c9c9");
 
-  // function mouseover(e: any, d: any) {
-  //   const compositionName = d.key.split(" ").join("-");
-  //   d3.selectAll(".stacked-default").style("opacity", 0.2);
-  //   d3.selectAll(".stacked-text-default").style("opacity", 0);
-  //   d3.selectAll("." + compositionName).style("opacity", 1);
+  // 4. draw axis labels
+  ag.append("text")
+    .classed("axis_text", true)
+    .attr("x", 0)
+    .attr("y", cp.height - cp.margin.top - cp.margin.bottom + 5)
+    .style("font-size", "14px")
+    .style("text-anchor", "middle")
+    .style("alignment-baseline", "hanging")
+    .text(d => d.month_str);
 
-  //   // @ts-ignore
-  //   const ys = series.find((s) => s.key === d.key).slice(0, 10);
-  //   // regionIds.forEach((region, ind) => {
-  //   //   d3.selectAll(".region-" + region).attr("transform","none");
-  //   // });
-  //   regionIds.forEach((region, ind) => {
-  //     d3.selectAll(".region-" + region).attr("transform", `translate(0, ${y(d[0]) - y(ys[ind][0])})`);
-  //   });
-  // }
+  // 5. create object to cover axis lines above top ridge
+  // @ts-ignore
+  let cover_path = [...data()[0].data];
+  cover_path.push({ Month: 12, engagement: 100 });
+  cover_path.push({ Month: 1, engagement: 100 });
+  svg.append("path")
+    .attr("id", "axis_line_cover")
+    .attr("d", line2(cover_path))
+    .attr("transform", `translate(${cp.margin.left}, ${cp.margin.top})`)
+    .style("fill", "white");
 
-  // function mouseleave(e: any, d: any) {
-  //   d3.selectAll(".stacked-default").style("opacity", 1);
-  //   d3.selectAll(".stacked-text-default").style("opacity", 0);
-  //   regionIds.forEach((region, ind) => {
-  //     d3.selectAll(".region-" + region).attr("transform", "none");
-  //   });
-  // }
+  /*** create ridges ***/
+  // 1. create ridge groups in correct location with hover events
+  const rg = svg.selectAll("g.ridge_group")
+    .data(data).enter()
+    .append("g")
+    .classed("ridge_group", true)
+    .attr("transform", d => `translate(${cp.margin.left},
+      ${cp.margin.top + (d.Order - 1) * cp.margin.ridge})`);
 
-  // return svg.node();
+  // 2. add ridge labels
+  rg.append("text")
+    .classed("ridge_label", true)
+    .attr("x", -5)
+    .attr("y", cp.ridge_height)
+    .style("font-size", "14px")
+    .style("text-anchor", "end")
+    .style("alignment-baseline", "middle")
+    .text(d => d.Time);
+
+  // 3. add path for ridge fill
+  rg.append("path")
+    .classed("ridge_fill", true)
+    .attr("d", d => {
+      // take original data and add points for bottom corners to create fill
+      let path = [...d.data];
+      path.push({ Month: 12, engagement: 0 });
+      path.push({ Month: 1, engagement: 0 });
+      return line2(path);
+    })
+    // @ts-ignore
+    .style("fill", d => color(d.avg).replace(")", ", 0.40)"))
+    .style("stroke", "#c9c9c9");
+
+  // 4. add path for ridge
+  rg.append("path")
+    .classed("ridge_path", true)
+    .attr("d", d => line2(d.data))
+    .style("fill", "none")
+    .style("stroke", d => color(d.avg));
+
+  // 5. add hover box (where user can hover)
+  rg.append("rect")
+    .attr("x", -cp.margin.left)
+    .attr("y", cp.ridge_height * 0.65)
+    .attr("width", WIDTH)
+    .attr("height", cp.margin.ridge)
+    .style("fill", "rgba(0, 0, 0, 0)")
+    .on("mouseover", function (e, d) {
+      svg.selectAll("g.ridge_group").style("opacity", (d0: any) => d0.Time === d.Time ? 1 : 0.3);
+    })
+    .on("mouseleave", function (e, d) {
+      svg.selectAll("g.ridge_group")
+        .style("opacity", 1);
+    });
+
+  // Creating a Tooltip Using the Title Tag
+  rg.append("title")
+    .text(function (d) { return `Time: ${d.Time}\nTotal engagement: ${d3.format(",")(d.avg)}`; });
+
+  return svg.node();
 }
