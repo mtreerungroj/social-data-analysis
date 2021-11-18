@@ -68,9 +68,11 @@ function App() {
                     {focusHashtagNode ?
                       <div>
                         Engagement by time of {focusHashtagNode}
-                        {hashtagEngagementRawData && <EngagementChart hashtagEngagementRawData={hashtagEngagementRawData} />}
+                        {hashtagEngagementRawData ?
+                          <EngagementChart hashtagEngagementRawData={hashtagEngagementRawData} /> :
+                          <div>Loading...</div>}
                       </div> :
-                      <div> Wait for clicking node</div>
+                      <div> Clicking node to see more detail about hashtag engagement</div>
                     }
                   </div> :
                   <div>Loading...</div>
