@@ -37,6 +37,11 @@ function App() {
     if (focusHashtag) {
       fetchData(focusHashtag)
     }
+
+    // clear engagement chart
+    setHashtagEngagementRawData([])
+    setHashtagRelationshipList(undefined)
+    setFocusHashtagNode(undefined)
   }, [focusHashtag])
 
   useEffect(() => {
