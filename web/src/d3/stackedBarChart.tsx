@@ -140,7 +140,8 @@ const drawStackedBarChart = (data: any) => {
     .append("text")
     // @ts-ignore
     .attr("x", (d) => x(d.data.name) + x.bandwidth() / 2)
-    .attr("y", (d) => (y(d[0]) + y(d[1])) / 2 + 4)
+    .attr("y", (d) => ((y(d[0]) + y(d[1])) / 2) - 20)
+    .attr('transform', 'translate(0, 18)')
     .attr("text-anchor", "middle")
     .attr("class", (d) => {
       // @ts-ignore
@@ -152,10 +153,19 @@ const drawStackedBarChart = (data: any) => {
     .style("font-family", "sans-serif")
     .style("opacity", 0)
     .style("cursor", "default")
-    // @ts-ignore
-    .text((d) => `${d3.format('.3s')(d.data[d.key])}` + `(${(d.data[d.key] / d.data["all"] * 100).toFixed(2)}%)`)
 
-    .clone(true)
+  gStackedValueText.append("tspan")
+    // @ts-ignore
+    .text((d) => d3.format('.3s')(d.data[d.key]))
+
+  gStackedValueText.append("tspan")
+    // @ts-ignore
+    .attr('x', (d) => x(d.data.name) + x.bandwidth() / 2)
+    .attr("dy", 16)
+    // @ts-ignore
+    .text(d => (d.data[d.key] / d.data["all"] * 100).toFixed(2) + "%")
+
+  gStackedValueText.clone(true)
     .lower()
     .attr("class", (d) => {
       // @ts-ignore
