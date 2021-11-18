@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
 import { IHashtagEngagementRawData } from '../type/dataTypes'
+import { Legend } from './EngagementChartLegend'
 import { prepareHashtagEngagementData } from './util'
 
 interface IEngagementChartProps {
@@ -19,10 +20,11 @@ export const EngagementChart = (props: IEngagementChartProps) => {
 
     if (!hashtagEngagementData) return
     drawEngagementChart(hashtagEngagementData)
+    Legend(hashtagEngagementData)
   }, [hashtagEngagementRawData])
 
   return <div>
-    <div id="stack-bar-chart-legend"></div>
+    <div id="engagement-chart-legend"></div>
     <div id="engagement-chart-area"></div>
   </div>
 }
