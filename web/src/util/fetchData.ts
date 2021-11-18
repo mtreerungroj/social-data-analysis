@@ -66,10 +66,5 @@ export const fetchHashtagOverviewData = async (hashtagList: string[]) => {
 export const fetchHashtagEngagementData = async (focusHashtagNode: String) => {
   const hashtagListData = await fetch(getHashtagEngagementDataPATH)
     .then(res => res.json())
-  // .then(data => data.map((e: any, i: Number) => ({
-  //   id: i,
-  //   label: e.hashtag,
-  //   value: e.no_hashtags
-  // })))
   return hashtagListData
 }

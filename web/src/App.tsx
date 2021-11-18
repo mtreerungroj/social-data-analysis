@@ -3,9 +3,9 @@ import { HashtagSearch } from './component/HashtagSearch';
 import { EngagementChart } from './d3/engagementChart';
 import { NetworkGraph } from './d3/networkGraph';
 import { StackedBarChart } from './d3/stackedBarChart';
-import { IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
-import { fetchHashtagListData } from './util/fetchData';
-import { getHashtagEngagementData, getHashtagRelationshipData } from './util/prepareData';
+import { IHashtagEngagementRawData, IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
+import { fetchHashtagEngagementData, fetchHashtagListData } from './util/fetchData';
+import { getHashtagRelationshipData } from './util/prepareData';
 
 require('./App.css');
 
@@ -14,7 +14,7 @@ function App() {
   let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
   let [hashtagRelationshipList, setHashtagRelationshipList] = useState<IHashtagRelationshipItem>()
   let [focusHashtagNode, setFocusHashtagNode] = useState()
-  let [hashtagEngagementData, setHashtagEngagementData] = useState()
+  let [hashtagEngagementRawData, setHashtagEngagementRawData] = useState<IHashtagEngagementRawData[]>()
 
 
   useEffect(() => {
@@ -45,21 +45,13 @@ function App() {
 
   useEffect(() => {
     console.log('focusHashtagNode', focusHashtagNode, 'fetching engagement data...')
-
-    const fetchData = async (focusHashtagNode: string) => {
-      const hashtagEngagementData = await getHashtagEngagementData(focusHashtagNode)
-      console.log('fetchHashtagEngagementData will get', hashtagEngagementData)
-      setHashtagEngagementData(hashtagEngagementData)
-    }
-
-    if (focusHashtagNode) {
-      fetchData(focusHashtagNode)
-    }
+    if (!focusHashtagNode) return
+    fetchHashtagEngagementData(focusHashtagNode).then(data => setHashtagEngagementRawData(data))
   }, [focusHashtagNode])
 
   useEffect(() => {
-    console.log('hashtagEngagementData', hashtagEngagementData)
-  }, [hashtagEngagementData])
+    console.log('hashtagEngagementData', hashtagEngagementRawData)
+  }, [hashtagEngagementRawData])
 
   return (
     <div className="App">
@@ -74,7 +66,10 @@ function App() {
                   <div className="focusHashtag">
                     <NetworkGraph hashtagRelationshipList={hashtagRelationshipList} focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
                     {focusHashtagNode ?
-                      <div> Engagement by time of {focusHashtagNode} <EngagementChart hashtagEngagementData={hashtagEngagementData} /></div> :
+                      <div>
+                        Engagement by time of {focusHashtagNode}
+                        {hashtagEngagementRawData && <EngagementChart hashtagEngagementRawData={hashtagEngagementRawData} />}
+                      </div> :
                       <div> Wait for clicking node</div>
                     }
                   </div> :

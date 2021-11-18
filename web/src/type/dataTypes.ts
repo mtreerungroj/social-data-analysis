@@ -9,6 +9,17 @@ export interface IHashtagRelationshipItem {
   links: ILink[]
 }
 
+export interface IHashtagEngagementRawData {
+  hash: string,
+  Month: number
+  Time: string,
+  engagement: number
+  post_id: number
+  total_engagement: number
+  Date: string
+  Order: number
+}
+
 interface INode {
   id: string,
   size: number

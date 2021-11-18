@@ -1,18 +1,24 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
+import { IHashtagEngagementRawData } from '../type/dataTypes'
+import { prepareHashtagEngagementData } from './util'
 
 interface IEngagementChartProps {
-  hashtagEngagementData: any,
+  hashtagEngagementRawData: IHashtagEngagementRawData[],
 }
 
 export const EngagementChart = (props: IEngagementChartProps) => {
-  const { hashtagEngagementData } = props
+  const { hashtagEngagementRawData } = props
 
   useEffect(() => {
+    if (!hashtagEngagementRawData) return
+    console.log('hashtagEngagementData', hashtagEngagementRawData)
+
+    const hashtagEngagementData = prepareHashtagEngagementData(hashtagEngagementRawData)
     console.log('hashtagEngagementData', hashtagEngagementData)
 
-    // drawEngagementChart(data)
-  }, [])
+    // drawEngagementChart(hashtagEngagementData)
+  }, [hashtagEngagementRawData])
 
   return <div>
     <div id="stack-bar-chart-legend"></div>
