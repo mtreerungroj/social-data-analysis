@@ -1,21 +1,83 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
-import top10HashtagList from '../data/top10HashtagList.json'
-import { Legend } from './StackBarLegend'
+import data from '../data/datatop10_percent.json'
 
-console.log('top10HashtagList', top10HashtagList)
+console.log('datatop10_percent', data)
 
-const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
-const HEIGHT = 500
-const WIDTH = 800
-const sortBy = 'hashtag'
-const keys = ["facebook", "twitter", "instagram", "youtube"]
-const keyssel = ["facebook", "twitter", "instagram", "youtube"]
+interface IDataTop10 {
+  hashtag: string,
+  composition_fb: number,
+  composition_in: number,
+  composition_tw: number,
+  composition_yt: number,
+  total: number
+}
+
+const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 30 })
+const HEIGHT = 600
+const WIDTH = 900
+
+const regionIds = data.map(x => x.hashtag)
+const regions = data.map(x => x.hashtag)
+
+const compositionPercents = ["composition_fb", "composition_tw", "composition_in", "composition_yt"]
+const compositionNames = ["Facebook", "Twitter", "Intragram", "Youtube"]
+const compositionPercentsToName = Object.fromEntries(compositionPercents.map((_, i) => [compositionPercents[i], compositionNames[i]]))
+
+const compositionByRegion = () => {
+  const compositionData = regionIds.reduce((res: any, cur: any) => {
+    res[cur] = {};
+    res[cur]["hashtag"] = cur;
+    res[cur]["all"] = 0;
+    for (const composition of compositionNames) {
+      res[cur][composition] = 0;
+    }
+    return res;
+  }, {});
+
+  data.forEach((d: IDataTop10) => {
+    compositionPercents.forEach((cp: string) => {
+      // @ts-ignore
+      if (d[cp]) {
+        // @ts-ignore
+        compositionData[d.hashtag][compositionPercentsToName[cp]] += d.total * d[cp] / 100;
+        // @ts-ignore
+        compositionData[d.hashtag]["all"] += d.total * d[cp] / 100;
+      }
+    })
+  })
+
+  return regionIds.map((regionId, ind) => {
+    return Object.assign({
+      name: regions[ind]
+    }, compositionData[regionId])
+  });
+}
+
+// use blind safe colors
+const colorCodes = ["#3b5998", "#1DA1F2", "#c32aa3", "#FF0000"];
+const color = d3.scaleOrdinal()
+  .domain(compositionNames)
+  .range(colorCodes);
+
+const x = d3.scaleBand()
+  .domain(regionIds)
+  .range([MARGIN.LEFT, WIDTH - MARGIN.RIGHT])
+  .padding(0.1)
+
+const series = d3.stack()
+  .keys(compositionNames)(compositionByRegion())
+  // @ts-ignore
+  .map(d => (d.forEach(v => v.key = d.key), d))
+
+const y = d3.scaleLinear()
+  // @ts-ignore
+  .domain([0, d3.max(series, d => d3.max(d, d => d[1]))])
+  .rangeRound([HEIGHT - MARGIN.BOTTOM, MARGIN.TOP])
 
 export const StackedBarChart = () => {
   useEffect(() => {
-    drawStackedBarChart(top10HashtagList)
-    Legend(keys)
+    drawStackedBarChart(data)
   }, [])
 
   return <div>
@@ -24,146 +86,163 @@ export const StackedBarChart = () => {
   </div>
 }
 
-const sortData = (data: any, sortBy: string, ascending: boolean = true) => {
-  if (ascending) {
-    return data.sort(function (a: any, b: any) { return a[sortBy] - b[sortBy]; });
-  } else {
-    return data.sort(function (a: any, b: any) { return b[sortBy] - a[sortBy]; });
-  }
-}
-
-const drawStackedBarChart = (top10HashtagList: any) => {
-  const data = sortData(top10HashtagList, sortBy, true)
-
-  const color = d3.scaleOrdinal()
-    .domain(keys)
-    .range(d3.schemeSpectral[keys.length])
-    .unknown("#ccc")
-
-  const xAxis = (g: any) => g
-    .attr("transform", `translate(0,${MARGIN.TOP})`)
-    .call(d3.axisTop(x).ticks(WIDTH / 100, "s"))
-    // @ts-ignore
-    .call(g => g.selectAll(".domain").remove())
-
-  const x = d3.scaleLinear()
-    .domain([0, 22303])
-    .range([MARGIN.LEFT, WIDTH - MARGIN.RIGHT - 200])
-
-  const y = d3.scaleBand()
-    .domain(data.map((d: any) => d.hashtag))
-    .range([MARGIN.TOP, (HEIGHT - MARGIN.BOTTOM)])
-
-  // @ts-ignore
-  y.invert = function (a) {
-    var domain = this.domain();
-    var range = this.range()
-    // @ts-ignore
-    var scale = d3.scaleQuantize().domain(range).range(domain)
-    return scale(a)
-  };
-
-  function zoom(svg: any) {
-    svg.call(d3.zoom()
-      .scaleExtent([1, 3])
-      .translateExtent([[0, 0], [WIDTH - MARGIN.RIGHT, (HEIGHT - MARGIN.BOTTOM)]])
-      .extent([[0, 0], [WIDTH - MARGIN.RIGHT, (HEIGHT - MARGIN.BOTTOM)]])
-      .on("zoom", zoomed))
-      .on("wheel", (event: any) => event.preventDefault());
-
-    function zoomed(event: any) {
-      y.range([MARGIN.TOP, HEIGHT - MARGIN.BOTTOM].map((d, i) => event.transform.applyY(d)));
-      svg.selectAll(".bars rect")
-        // @ts-ignore
-        .attr("y", (d: any, i: any) => y(d.data.hashtag))
-        .attr("height", y.bandwidth() - 5 / event.transform.k);
-    }
-  }
-
-  const series = () => {
-    let t = keyssel.filter(function (value, index, arr) { return value !== sortBy; });
-    if (t.length < keyssel.length) {
-      t.splice(0, 0, sortBy);
-    }
-
-    return d3.stack()
-      // @ts-ignore
-      .keys(t)(data)
-      // @ts-ignore
-      // eslint-disable-next-line no-sequences
-      .map(d => (d.forEach(v => v.key = d.key), d))
-  }
-
+const drawStackedBarChart = (data: any) => {
   const svg = d3.select("#stack-bar-chart-area").append("svg")
     .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
     .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
-    .call(zoom)
-    .on("mousemove", function (event) {
-      let coordinate = d3.pointer(event);
-      // @ts-ignore
-      let focusHashtag = data.find(e => e.hashtag === y.invert(coordinate[1]));
-      if (!focusHashtag) {
-        return
-      }
+    .attr("viewBox", `-80 -20 ${WIDTH + 100} ${HEIGHT + 50}`)
 
-      svg.selectAll(".tooltip text.hashtag").text("Hashtag:" + focusHashtag.hashtag);
-      svg.selectAll(".tooltip text.facebook").text("Facebook:" + focusHashtag.facebook);
-      svg.selectAll(".tooltip text.twitter").text("Twitter:" + focusHashtag.twitter);
-      svg.selectAll(".tooltip text.instagram").text("Instagram:" + focusHashtag.instagram);
-      svg.selectAll(".tooltip text.youtube").text("Youtube:" + focusHashtag.youtube);
-    });
+  const x = d3.scaleBand()
+    .domain(regions)
+    .range([0, WIDTH])
+    .padding(0.2);
 
+  svg.append("g")
+    .attr("transform", "translate(0," + HEIGHT + ")")
+    .call(d3.axisBottom(x).tickSizeOuter(0));
 
-  svg.selectAll("g")
+  // stacked bars
+  const gStacked = svg.append("g")
+    .selectAll("g")
     .data(series)
-    .join("g")
+    .enter()
+    .append("g")
     // @ts-ignore
-    .attr("fill", d => color(d.key))
-    .attr("class", "bars")
+    .attr("fill", (d) => color(d.key))
     .selectAll("rect")
-    .data(d => d)
-    .join("rect")
-    .attr("x", d => x(d[0]))
+    .data((d) => d)
+    .enter()
+    .append("rect")
     // @ts-ignore
-    .attr("y", (d, i) => y(d.data.hashtag))
-    .attr("width", d => x(d[1]) - x(d[0]))
-    .attr("height", y.bandwidth() - 5);
+    .attr("x", (d) => x(d.data.name))
+    .attr("y", (d) => y(d[1]))
+    .attr("height", (d) => y(d[0]) - y(d[1]))
+    .attr("width", x.bandwidth())
+    .attr("stroke", "#D0D3D4")
+    .attr("class", (d) => {
+      // @ts-ignore
+      const compositionName = d.key.split(" ").join("-");
+      return `stacked-default ${compositionName} region-${d.data.region_id}`
+    })
+    .on("mouseover", mouseover)
+    .on("mouseleave", mouseleave)
 
-  svg.append("rect")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("fill", "white")
-    .attr("width", WIDTH)
-    .attr("height", MARGIN.TOP);
+  const gStackedValueText = svg.append("g")
+    .selectAll("g")
+    .data(series)
+    .enter()
+    .append("g")
+    .selectAll("text")
+    .data((d) => d)
+    .enter()
+    .append("text")
+    // @ts-ignore
+    .attr("x", (d) => x(d.data.name) + x.bandwidth() / 2)
+    .attr("y", (d) => (y(d[0]) + y(d[1])) / 2 + 4)
+    .attr("text-anchor", "middle")
+    .attr("class", (d) => {
+      // @ts-ignore
+      const compositionName = d.key.split(" ").join("-");
+      return `stacked-text-default ${compositionName} region-${d.data.region_id}`
+    })
+    .attr("pointer-events", "none")
+    .style("font-size", 12)
+    .style("font-family", "sans-serif")
+    .style("opacity", 0)
+    .style("cursor", "default")
+    // @ts-ignore
+    .text((d) => `${d3.format('.3s')(d.data[d.key])}` + `(${(d.data[d.key] / d.data["all"] * 100).toFixed(2)}%)`)
 
-  svg.append("g")
-    .attr("class", "tooltip")
-    .attr("transform", "translate(" + (WIDTH - MARGIN.RIGHT - 200) + ",50)");
+    .clone(true)
+    .lower()
+    .attr("class", (d) => {
+      // @ts-ignore
+      const compositionName = d.key.split(" ").join("-");
+      return `stacked-text-default ${compositionName} region-${d.data.region_id}`
+    })
+    .attr("aria-hidden", "true")
+    .attr("fill", "none")
+    .attr("stroke", "white")
+    .attr("stroke-width", 3)
+    .attr("stroke-linecap", "round")
+    .attr("stroke-linejoin", "round")
+    .on("mouseover", mouseover)
+    .on("mouseleave", mouseleave)
 
-  let tooltipg = svg.selectAll(".tooltip");
 
-  tooltipg.append("rect")
-    .attr("width", 200)
-    .attr("height", 400)
-    .attr("fill", "yellowgreen");
+  const yTitle = (g: any) => g
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", 0 - HEIGHT / 2)
+    .attr("y", 0 - MARGIN.LEFT - 20)
+    .attr("class", "axis-label")
+    .style("text-anchor", "middle")
+    .style("font-size", 14)
+    .style("font-family", "sans-serif")
+    .text("Number of posts")
 
-  tooltipg.append("text")
-    .attr("class", "hashtag")
-    .attr("y", 20);
-  tooltipg.append("text")
-    .attr("class", "facebook")
-    .attr("y", 40);
-  tooltipg.append("text")
-    .attr("class", "twitter")
-    .attr("y", 60);
-  tooltipg.append("text")
-    .attr("class", "instagram")
-    .attr("y", 80);
-  tooltipg.append("text")
-    .attr("class", "youtube")
-    .attr("y", 100);
+  const yAxis = (g: any) => g
+    .attr("transform", `translate(0, 0)`)
+    .call(d3.axisLeft(y).ticks(null, "s"))
 
-  svg.append("g")
-    .attr("class", "x-axis")
-    .call(xAxis);
+  svg.append("g").call(yTitle);
+  svg.append("g").call(yAxis);
+
+
+  // composition legends
+  const gLegendX = WIDTH - 100;
+  const gLegendY = 100;
+  const gLegendRect = svg.append("g")
+    .selectAll("regionLegendRect")
+    .data(compositionNames)
+    .enter()
+    .append("rect")
+    .attr("x", gLegendX)
+    .attr("y", (d, i) => gLegendY - i * (25))
+    .attr("width", 15)
+    .attr("height", 15)
+    .attr("class", (d, i) => "stacked-default " + compositionNames[i].split(" ").join("-"))
+    .style("fill", (d, i) => colorCodes[i])
+
+  const gLegendLabel = svg.append("g")
+    .selectAll("regionLegendLabel")
+    .data(compositionNames)
+    .enter()
+    .append("text")
+    .attr("x", gLegendX + 20)
+    .attr("y", (d, i) => gLegendY + 8 - i * (25))
+    .attr("text-anchor", "left")
+    .attr("class", (d, i) => "stacked-default " + compositionNames[i].split(" ").join("-"))
+    .style("cursor", "default")
+    .style("fill", (d, i) => colorCodes[i])
+    .style("alignment-baseline", "middle")
+    .style("font-size", 12)
+    .style("font-family", "sans-serif")
+    .text((d, i) => compositionNames[i])
+
+  function mouseover(e: any, d: any) {
+    const compositionName = d.key.split(" ").join("-");
+    d3.selectAll(".stacked-default").style("opacity", 0.2);
+    d3.selectAll(".stacked-text-default").style("opacity", 0);
+    d3.selectAll("." + compositionName).style("opacity", 1);
+
+    // @ts-ignore
+    const ys = series.find((s) => s.key === d.key).slice(0, 10);
+    // regionIds.forEach((region, ind) => {
+    //   d3.selectAll(".region-" + region).attr("transform","none");
+    // });
+    regionIds.forEach((region, ind) => {
+      d3.selectAll(".region-" + region).attr("transform", `translate(0, ${y(d[0]) - y(ys[ind][0])})`);
+    });
+  }
+
+  function mouseleave(e: any, d: any) {
+    d3.selectAll(".stacked-default").style("opacity", 1);
+    d3.selectAll(".stacked-text-default").style("opacity", 0);
+    regionIds.forEach((region, ind) => {
+      d3.selectAll(".region-" + region).attr("transform", "none");
+    });
+  }
+
+  return svg.node();
 }
