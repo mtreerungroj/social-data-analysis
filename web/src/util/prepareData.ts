@@ -1,6 +1,6 @@
 import { IHashtagItem, IHashtagRelationshipItem } from "../type/dataTypes"
 import { topN } from "./arrayUtil"
-import { fetchHashtagOverviewData, fetchHashtagRelationshipData } from "./fetchData"
+import { fetchHashtagEngagementData, fetchHashtagOverviewData, fetchHashtagRelationshipData } from "./fetchData"
 
 export const getHashtagRelationshipData = async (focusHashtag: IHashtagItem) => {
   const data = await fetchHashtagRelationshipData(focusHashtag)
@@ -34,4 +34,11 @@ export const getHashtagRelationshipData = async (focusHashtag: IHashtagItem) => 
 
   const hashtag_relation: IHashtagRelationshipItem = { nodes: nodesData, links: linksData }
   return hashtag_relation
+}
+
+export const getHashtagEngagementData = async (focusHashtagNode: String) => {
+  const data = await fetchHashtagEngagementData(focusHashtagNode)
+
+  // prepare data for chart
+  return data
 }

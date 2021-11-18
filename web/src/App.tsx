@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { HashtagSearch } from './component/HashtagSearch';
+import { EngagementChart } from './d3/engagementChart';
 import { NetworkGraph } from './d3/networkGraph';
 import { StackedBarChart } from './d3/stackedBarChart';
 import { IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
 import { fetchHashtagListData } from './util/fetchData';
-import { getHashtagRelationshipData } from './util/prepareData';
+import { getHashtagEngagementData, getHashtagRelationshipData } from './util/prepareData';
 
 require('./App.css');
 
@@ -13,6 +14,8 @@ function App() {
   let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
   let [hashtagRelationshipList, setHashtagRelationshipList] = useState<IHashtagRelationshipItem>()
   let [focusHashtagNode, setFocusHashtagNode] = useState()
+  let [hashtagEngagementData, setHashtagEngagementData] = useState()
+
 
   useEffect(() => {
     fetchHashtagListData().then(data => setHashtagList(data))
@@ -40,6 +43,24 @@ function App() {
     console.log('hashtagRelationshipList', hashtagRelationshipList)
   }, [hashtagRelationshipList])
 
+  useEffect(() => {
+    console.log('focusHashtagNode', focusHashtagNode, 'fetching engagement data...')
+
+    const fetchData = async (focusHashtagNode: string) => {
+      const hashtagEngagementData = await getHashtagEngagementData(focusHashtagNode)
+      console.log('fetchHashtagEngagementData will get', hashtagEngagementData)
+      setHashtagEngagementData(hashtagEngagementData)
+    }
+
+    if (focusHashtagNode) {
+      fetchData(focusHashtagNode)
+    }
+  }, [focusHashtagNode])
+
+  useEffect(() => {
+    console.log('hashtagEngagementData', hashtagEngagementData)
+  }, [hashtagEngagementData])
+
   return (
     <div className="App">
       {hashtagList &&
@@ -53,7 +74,7 @@ function App() {
                   <div className="focusHashtag">
                     <NetworkGraph hashtagRelationshipList={hashtagRelationshipList} focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
                     {focusHashtagNode ?
-                      <div> Show spike graph for {focusHashtagNode}</div> :
+                      <div> Engagement by time of {focusHashtagNode} <EngagementChart hashtagEngagementData={hashtagEngagementData} /></div> :
                       <div> Wait for clicking node</div>
                     }
                   </div> :
