@@ -65,11 +65,14 @@ function App() {
           <HashtagSearch hashtagList={hashtagList} setFocusHashtag={setFocusHashtag} />
           {focusHashtag ?
             <div>
-              Show network graph for {focusHashtag.label}
+              {/* Show network graph for {focusHashtag.label} */}
               <div>
                 {hashtagRelationshipList ?
                   <div className="focusHashtag">
-                    <NetworkGraph hashtagRelationshipList={hashtagRelationshipList} focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
+                    <div>
+                      Relationship between {focusHashtag.label} and other hashtags <br />
+                      <NetworkGraph hashtagRelationshipList={hashtagRelationshipList} focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
+                    </div>
                     {focusHashtagNode ?
                       <div>
                         Engagement by time of {focusHashtagNode}

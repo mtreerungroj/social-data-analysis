@@ -40,7 +40,7 @@ const chart_param_init = ({
   width: WIDTH,
   ridge_height: 30,
   margin: {
-    top: 10,
+    top: 0,
     right: 25,
     bottom: 20,
     left: 100,
