@@ -6,6 +6,17 @@ require('./stackedBarChart.css');
 
 console.log('datatop10_percent', data)
 
+export const StackedBarChart = () => {
+  useEffect(() => {
+    drawStackedBarChart(data)
+  }, [])
+
+  return <div>
+    <div id="stack-bar-chart-legend"></div>
+    <div id="stack-bar-chart-area"></div>
+  </div>
+}
+
 const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 30 })
 const HEIGHT = 600
 const WIDTH = 900
@@ -67,17 +78,6 @@ const y = d3.scaleLinear()
   // @ts-ignore
   .domain([0, d3.max(series, d => d3.max(d, d => d[1]))])
   .rangeRound([HEIGHT - MARGIN.BOTTOM, MARGIN.TOP])
-
-export const StackedBarChart = () => {
-  useEffect(() => {
-    drawStackedBarChart(data)
-  }, [])
-
-  return <div>
-    <div id="stack-bar-chart-legend"></div>
-    <div id="stack-bar-chart-area"></div>
-  </div>
-}
 
 const drawStackedBarChart = (data: any) => {
   const svg = d3.select("#stack-bar-chart-area").append("svg")
