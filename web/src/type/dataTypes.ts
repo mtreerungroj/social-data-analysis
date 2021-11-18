@@ -9,6 +9,17 @@ export interface IHashtagRelationshipItem {
   links: ILink[]
 }
 
+interface INode {
+  id: string,
+  size: number
+}
+
+interface ILink {
+  source: any,
+  target: any,
+  value: number
+}
+
 export interface IHashtagEngagementRawData {
   hash: string,
   Month: number
@@ -20,13 +31,11 @@ export interface IHashtagEngagementRawData {
   Order: number
 }
 
-interface INode {
-  id: string,
-  size: number
-}
-
-interface ILink {
-  source: any,
-  target: any,
-  value: number
+export interface IDataTop10 {
+  hashtag: string,
+  composition_fb: number,
+  composition_in: number,
+  composition_tw: number,
+  composition_yt: number,
+  total: number
 }

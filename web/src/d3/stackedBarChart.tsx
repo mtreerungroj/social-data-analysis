@@ -1,18 +1,10 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
 import data from '../data/datatop10_percent.json'
+import { IDataTop10 } from '../type/dataTypes';
 require('./stackedBarChart.css');
 
 console.log('datatop10_percent', data)
-
-interface IDataTop10 {
-  hashtag: string,
-  composition_fb: number,
-  composition_in: number,
-  composition_tw: number,
-  composition_yt: number,
-  total: number
-}
 
 const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 30 })
 const HEIGHT = 600
