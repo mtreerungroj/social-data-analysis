@@ -4,6 +4,14 @@ const IS_DEV = true
 // const IS_DEV = false
 
 let getHashtagListPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagList?minimumPost=1000"
+let getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
+let getHashtagOverviewDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagOverallData"
+
+if (IS_DEV) {
+  getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
+  getHashtagOverviewDataPATH = "data/hashtagOverviewData.json"
+  getHashtagListPATH = "data/hashtagList.json"
+}
 
 export const fetchHashtagListData = async () => {
   const hashtagListData = await fetch(getHashtagListPATH)
@@ -14,15 +22,6 @@ export const fetchHashtagListData = async () => {
       value: e.no_hashtags
     })))
   return hashtagListData
-}
-
-let getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
-let getHashtagOverviewDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagOverallData"
-
-if (IS_DEV) {
-  getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
-  getHashtagOverviewDataPATH = "data/hashtagOverviewData.json"
-  getHashtagListPATH = "data/hashtagList.json"
 }
 
 export const fetchHashtagRelationshipData = async (focusHashtag: IHashtagItem) => {
