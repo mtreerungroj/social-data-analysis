@@ -119,6 +119,7 @@ const drawEngagementChart = (hashtagEngagementData: any) => {
 
 
   /*** init svg plot ***/
+  d3.select("#engagement-chart-area").selectAll("svg").remove()
   const svg = d3.select("#engagement-chart-area").append("svg")
     .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
     .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
