@@ -17,7 +17,8 @@ export const EngagementChart = (props: IEngagementChartProps) => {
     const hashtagEngagementData = prepareHashtagEngagementData(hashtagEngagementRawData)
     console.log('hashtagEngagementData', hashtagEngagementData)
 
-    // drawEngagementChart(hashtagEngagementData)
+    if (!hashtagEngagementData) return
+    drawEngagementChart(hashtagEngagementData)
   }, [hashtagEngagementRawData])
 
   return <div>
@@ -26,7 +27,49 @@ export const EngagementChart = (props: IEngagementChartProps) => {
   </div>
 }
 
-// const drawEngagementChart = (data: any) => {
+const time_dummy = ["00.00-00.59", "01.00-01.59", "02.00-02.59", "03.00-03.59", "04.00-04.59", "05.00-05.59", "06.00-06.59", "07.00-07.59", "08.00-08.59", "09.00-09.59", "10.00-10.59", "11.00-11.59", "12.00-12.59", "13.00-13.59", "14.00-14.59", "15.00-15.59", "16.00-16.59", "17.00-17.59", "18.00-18.59", "19.00-19.59", "20.00-20.59", "21.00-21.59", "22.00-22.59", "23.00-23.59"]
+const date_dummy = ["1/1/2020", "1/2/2020", "1/3/2020", "1/4/2020", "1/5/2020", "1/6/2020", "1/7/2020", "1/8/2020", "1/9/2020", "1/10/2020", "1/11/2020", "1/12/2020"]
+
+
+
+const drawEngagementChart = (hashtagEngagementData: any) => {
+  const data_x = hashtagEngagementData
+  console.log('data_x', data_x)
+
+  // insert dummy time
+  const data_y = () => {
+    let a = [...data_x];
+    for (let index = 1; index < 25; ++index) {
+      let check = a.filter(d => d['Order'] === index)
+      if (check.length === 0) {
+        a.push({ Time: time_dummy[+index - 1], avg: 0, Order: index, data: [{ Month: 1, Date: "1/1/2020", engagement: 0 }] });
+      }
+    }
+    return a.sort((a, b) => d3.ascending(a.Order, b.Order));
+  }
+
+  console.log('data_y', data_y())
+
+  // insert dummy date
+  const data = () => {
+    let c = [...data_y()];
+    for (let i = 0; i < 24; ++i) {
+      let date_data = c[i]['data'].map((e: any) => e['Date']);
+      for (let j = 0; j < 12; ++j) {
+        if (date_data.indexOf(date_dummy[j]) === -1) {
+          c[i]['data'].push({ Month: +j + 1, Date: date_dummy[j], engagement: 0 });
+        }
+      }
+      c[i]['data'].sort((a: any, b: any) => d3.ascending(a.Month, b.Month));
+    }
+    return c;
+  }
+
+  console.log('data data data', data())//.map((d: any) => d.data).flat())
+  // const y = () => d3.scaleLinear()
+  // .domain(d3.extent(data().map((d: any) => d.data).flat(), (d: any) => d.engagement))
+  // .range([chart_param.ridge_height, 0])
+
   // const svg = d3.select("#stack-bar-chart-area").append("svg")
   //   .attr("width", WIDTH + MARGIN.LEFT + MARGIN.RIGHT)
   //   .attr("height", HEIGHT + MARGIN.TOP + MARGIN.BOTTOM)
@@ -198,4 +241,4 @@ export const EngagementChart = (props: IEngagementChartProps) => {
   // }
 
   // return svg.node();
-// }
+}
