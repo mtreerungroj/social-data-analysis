@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 import { useEffect } from 'react'
 import data from '../data/datatop10_percent.json'
+require('./stackedBarChart.css');
 
 console.log('datatop10_percent', data)
 
@@ -21,7 +22,7 @@ const regionIds = data.map(x => x.hashtag)
 const regions = data.map(x => x.hashtag)
 
 const compositionPercents = ["composition_fb", "composition_tw", "composition_in", "composition_yt"]
-const compositionNames = ["Facebook", "Twitter", "Intragram", "Youtube"]
+const compositionNames = ["Facebook", "Twitter", "Instagram", "Youtube"]
 const compositionPercentsToName = Object.fromEntries(compositionPercents.map((_, i) => [compositionPercents[i], compositionNames[i]]))
 
 const compositionByRegion = () => {
@@ -98,6 +99,7 @@ const drawStackedBarChart = (data: any) => {
     .padding(0.2);
 
   svg.append("g")
+    .attr("class", "x axis")
     .attr("transform", "translate(0," + HEIGHT + ")")
     .call(d3.axisBottom(x).tickSizeOuter(0));
 
@@ -146,7 +148,7 @@ const drawStackedBarChart = (data: any) => {
       return `stacked-text-default ${compositionName} region-${d.data.region_id}`
     })
     .attr("pointer-events", "none")
-    .style("font-size", 12)
+    .style("font-size", 16)
     .style("font-family", "sans-serif")
     .style("opacity", 0)
     .style("cursor", "default")
@@ -177,13 +179,15 @@ const drawStackedBarChart = (data: any) => {
     .attr("y", 0 - MARGIN.LEFT - 20)
     .attr("class", "axis-label")
     .style("text-anchor", "middle")
-    .style("font-size", 14)
+    .style("font-size", 18)
     .style("font-family", "sans-serif")
     .text("Number of posts")
 
   const yAxis = (g: any) => g
+    .attr("class", "y axis")
     .attr("transform", `translate(0, 0)`)
-    .call(d3.axisLeft(y).ticks(null, "s"))
+    .call(d3.axisLeft(y)
+      .ticks(null, "s"))
 
   svg.append("g").call(yTitle);
   svg.append("g").call(yAxis);
@@ -216,7 +220,7 @@ const drawStackedBarChart = (data: any) => {
     .style("cursor", "default")
     .style("fill", (d, i) => colorCodes[i])
     .style("alignment-baseline", "middle")
-    .style("font-size", 12)
+    .style("font-size", 16)
     .style("font-family", "sans-serif")
     .text((d, i) => compositionNames[i])
 
