@@ -2,6 +2,7 @@ import * as d3 from 'd3'
 import { useEffect } from 'react'
 import { IHashtagRelationshipItem } from '../type/dataTypes'
 import { Legend } from './NetworkLegend'
+import { COLOR } from './color'
 
 const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
 const HEIGHT = 600
@@ -39,7 +40,7 @@ const drawNetworkGraph = (hashtagRelation: IHashtagRelationshipItem, focusHashta
     // @ts-ignore
     .domain(d3.extent(dataset.nodes, (d: any) => Number(d.size)))
     // @ts-ignore
-    .range(['#daf0ff', '#1167b1'])// 45b6fe
+    .range([COLOR.LIGHTBLUE, COLOR.DARKBLUE])// 45b6fe
 
   const radiusScale = d3.scaleLinear()
     // @ts-ignore
@@ -93,7 +94,7 @@ const drawNetworkGraph = (hashtagRelation: IHashtagRelationshipItem, focusHashta
     .enter()
     .append("line")
     .attr("class", "links")
-    .attr("stroke", "#999")
+    .attr("stroke", COLOR.GREY)
     .attr("stroke-width", "2px")
     .style("opacity", 0.8)
     .attr("id", (d: any) => "line" + d.source + d.target)
@@ -124,7 +125,7 @@ const drawNetworkGraph = (hashtagRelation: IHashtagRelationshipItem, focusHashta
     .attr('class', 'edgelabel')
     .attr('id', function (d, i) { return 'edgelabel' + i })
     .attr('font-size', 14)
-    .attr('fill', '#aaa');
+    .attr('fill', COLOR.GREY);
 
   edgelabels.append('textPath') //To render text along the shape of a <path>, enclose the text in a <textPath> element that has an href attribute with a reference to the <path> element.
     .attr('xlink:href', function (d, i) { return '#edgepath' + i })

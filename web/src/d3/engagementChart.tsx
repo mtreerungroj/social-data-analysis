@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { IHashtagEngagementRawData } from '../type/dataTypes'
 import { Legend } from './EngagementChartLegend'
 import { prepareHashtagEngagementData } from './util'
+import { COLOR } from './color'
 
 interface IEngagementChartProps {
   hashtagEngagementRawData: IHashtagEngagementRawData[],
@@ -104,7 +105,7 @@ const drawEngagementChart = (hashtagEngagementData: any) => {
     .domain(d3.extent(data_x, d => d.avg))
     // .range(["#d65e9b", "#8bb56e"])
     // @ts-ignore
-    .range(["white", d3.hcl("hsl(207, 44%, 49%)").darker()])
+    .range([COLOR.LIGHTBLUE, COLOR.DARKBLUE])
 
   // a simple line to plot to fill under the ridge (showing true data)
   const line1 = d3.line()
@@ -167,7 +168,7 @@ const drawEngagementChart = (hashtagEngagementData: any) => {
     .attr("y1", 0)
     .attr("x2", 0)
     .attr("y2", cp.height - cp.margin.top - cp.margin.bottom)
-    .style("stroke", "#c9c9c9");
+    .style("stroke", COLOR.LIGHTGREY);
 
   // 4. draw axis labels
   ag.append("text")
@@ -221,7 +222,7 @@ const drawEngagementChart = (hashtagEngagementData: any) => {
     })
     // @ts-ignore
     .style("fill", d => color(d.avg).replace(")", ", 0.40)"))
-    .style("stroke", "#c9c9c9");
+    .style("stroke", COLOR.LIGHTGREY);
 
   // 4. add path for ridge
   rg.append("path")

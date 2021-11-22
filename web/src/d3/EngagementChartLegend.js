@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import { COLOR } from './color'
 
 // Copyright 2021, Observable Inc.
 // Released under the ISC license.
@@ -18,7 +19,7 @@ export function Legend(dataset, {
 } = {}) {
   const color = d3.scaleSequential()
     .domain(d3.extent(dataset, d => d.avg))
-    .range(["white", d3.hcl("hsl(207, 44%, 49%)").darker()])
+    .range([COLOR.LIGHTBLUE, COLOR.DARKBLUE])
 
   function ramp(color, n = 256) {
     const canvas = document.createElement("canvas");
