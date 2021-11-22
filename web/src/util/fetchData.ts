@@ -1,7 +1,7 @@
 import { IHashtagItem } from "../type/dataTypes"
 
-// const IS_DEV = true
-const IS_DEV = false
+const IS_DEV = true
+// const IS_DEV = false
 
 let getHashtagListPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagList?minimumPost=1000"
 let getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
@@ -65,6 +65,9 @@ export const fetchHashtagOverviewData = async (hashtagList: string[]) => {
 
 export const fetchHashtagEngagementData = async (focusHashtagNode: String) => {
   let path = getHashtagEngagementDataPATH + focusHashtagNode.substring(1)
+  if (IS_DEV) {
+    path = getHashtagEngagementDataPATH
+  }
   const hashtagEngagementData = await fetch(path)
     .then(res => res.json())
   return hashtagEngagementData
