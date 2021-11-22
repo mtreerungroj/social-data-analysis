@@ -1,34 +1,77 @@
 import * as d3 from 'd3'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { IHashtagRelationshipItem } from '../type/dataTypes'
 import { Legend } from './NetworkLegend'
 import { COLOR } from './color'
+import { NodeAdjustment } from '../component/NodeAdjustment'
+import { topN } from '../util/arrayUtil';
+import { prepareHashtagRelationshipData } from '../util/prepareData';
+import { AnyNsRecord } from 'dns';
+import { Box } from '@mui/system';
 
 const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
 const HEIGHT = 600
 const WIDTH = 600
 
 interface INetworkGraphProps {
-  hashtagRelationshipList: IHashtagRelationshipItem,
+  hashtagRelationshipList: any,
   focusHashtag: string,
-  setFocusHashtagNode: (arg0: any) => void
+  setFocusHashtagNode: (arg0: any) => void,
+  numberOfNode: number,
+  setNumberOfNode: (arg0: any) => void
 }
 
 export const NetworkGraph = (props: INetworkGraphProps) => {
-  const { hashtagRelationshipList, focusHashtag, setFocusHashtagNode } = props
+  const { hashtagRelationshipList, focusHashtag, setFocusHashtagNode, numberOfNode, setNumberOfNode } = props
+  let [adjustHashtagRelationshipList, setAdjustHashtagRelationshipList] = useState<any>()
+  let [maxNumberOfNode, setMaxNumberOfNode] = useState<number>(20)
 
   useEffect(() => {
     if (!focusHashtag) return
     if (!hashtagRelationshipList) return
     console.log('[NetworkGraph] focusHashtag', focusHashtag)
     console.log('hashtagRelationshipList', hashtagRelationshipList)
+    setMaxNumberOfNode(hashtagRelationshipList.length)
+    const topn = topN(hashtagRelationshipList, 'value', numberOfNode)
+    const prepare = async (topn: any) => {
+      const data = await prepareHashtagRelationshipData(topn)
+      if (!data) return
+      setAdjustHashtagRelationshipList(data)
+      console.log('data.nodes.length', data.nodes.length)
+    }
+    prepare(topn)
+  }, [focusHashtag, hashtagRelationshipList, numberOfNode])
 
-    drawNetworkGraph(hashtagRelationshipList, focusHashtag, setFocusHashtagNode)
-    Legend(hashtagRelationshipList)
-  }, [focusHashtag, hashtagRelationshipList, setFocusHashtagNode])
+  useEffect(() => {
+    if (!adjustHashtagRelationshipList) return
+    console.log('adjustHashtagRelationshipList', adjustHashtagRelationshipList)
+    drawNetworkGraph(adjustHashtagRelationshipList, focusHashtag, setFocusHashtagNode)
+    Legend(adjustHashtagRelationshipList)
+  }, [adjustHashtagRelationshipList, focusHashtag, setFocusHashtagNode])
+
+  useEffect(() => {
+    if (!hashtagRelationshipList) return
+
+    const topn = topN(hashtagRelationshipList, 'value', numberOfNode)
+    const prepare = async (topn: any) => {
+      const data = await prepareHashtagRelationshipData(topn)
+      if (!data) return
+      setAdjustHashtagRelationshipList(data)
+    }
+    prepare(topn)
+  }, [hashtagRelationshipList, numberOfNode])
 
   return <div>
-    <div id="network-graph-legend"></div>
+    <div>
+      Adjust number of nodes:
+      <Box width={320} height={50} sx={{ marginTop: 5 }}>
+        <NodeAdjustment
+          numberOfNode={numberOfNode}
+          setNumberOfNode={setNumberOfNode}
+          maxNumberOfNode={maxNumberOfNode} />
+      </Box>
+      <div id="network-graph-legend"></div>
+    </div>
     <div id="network-graph-area"></div>
   </div>
 }

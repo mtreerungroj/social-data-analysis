@@ -12,10 +12,10 @@ require('./App.css');
 function App() {
   let [hashtagList, setHashtagList] = useState<IHashtagItem[]>()
   let [focusHashtag, setFocusHashtag] = useState<IHashtagItem>()
-  let [hashtagRelationshipList, setHashtagRelationshipList] = useState<IHashtagRelationshipItem>()
+  let [hashtagRelationshipList, setHashtagRelationshipList] = useState()
   let [focusHashtagNode, setFocusHashtagNode] = useState()
   let [hashtagEngagementRawData, setHashtagEngagementRawData] = useState<IHashtagEngagementRawData[]>()
-
+  let [numberOfNode, setNumberOfNode] = useState(20)
 
   useEffect(() => {
     fetchHashtagListData().then(data => setHashtagList(data))
@@ -44,6 +44,11 @@ function App() {
     setFocusHashtagNode(undefined)
   }, [focusHashtag])
 
+  // useEffect(() => {
+  //   if (!focusHashtag) return
+
+  // }, [numberOfNode])
+
   useEffect(() => {
     console.log('hashtagRelationshipList', hashtagRelationshipList)
   }, [hashtagRelationshipList])
@@ -71,7 +76,13 @@ function App() {
                   <div className="focusHashtag">
                     <div>
                       Relationship between {focusHashtag.label} and other hashtags <br />
-                      <NetworkGraph hashtagRelationshipList={hashtagRelationshipList} focusHashtag={focusHashtag.label} setFocusHashtagNode={setFocusHashtagNode} />
+                      <NetworkGraph
+                        hashtagRelationshipList={hashtagRelationshipList}
+                        focusHashtag={focusHashtag.label}
+                        setFocusHashtagNode={setFocusHashtagNode}
+                        numberOfNode={numberOfNode}
+                        setNumberOfNode={setNumberOfNode}
+                      />
                     </div>
                     {focusHashtagNode ?
                       <div>

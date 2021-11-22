@@ -1,23 +1,28 @@
 import { IHashtagItem, IHashtagRelationshipItem } from "../type/dataTypes"
-import { topN } from "./arrayUtil"
+// import { topN } from "./arrayUtil"
 import { fetchHashtagOverviewData, fetchHashtagRelationshipData } from "./fetchData"
 
 export const getHashtagRelationshipData = async (focusHashtag: IHashtagItem) => {
   const data = await fetchHashtagRelationshipData(focusHashtag)
+  console.log('fetchHashtagRelationshipData data', data)
   // get top 20 higghest node value
-  const topNHashtagRelation = topN(data, 'value', 20)
-  if (!topNHashtagRelation) return
+  // const topNHashtagRelation = topN(data, 'value', 40)
+  // if (!topNHashtagRelation) return
   // console.log('topNHashtagRelation', topNHashtagRelation)
 
+  return data
+}
+
+export const prepareHashtagRelationshipData = async (data: any) => {
   // modify data to be compatible with network graph (follow hashtagRelationship_stock.json)
-  const uniqueHashtagA = topNHashtagRelation.map((x: any) => x.nodeA)
-  const uniqueHashtagB = topNHashtagRelation.map((x: any) => x.nodeB)
-  const uniqueHashtag = Array.from(new Set(uniqueHashtagA.concat(uniqueHashtagB)))
-  // console.log('uniqueHashtag', uniqueHashtag)
+  const uniqueHashtagA = data.map((x: any) => x.nodeA)
+  const uniqueHashtagB = data.map((x: any) => x.nodeB)
+  const uniqueHashtag: string[] = Array.from(new Set(uniqueHashtagA.concat(uniqueHashtagB)))
+  console.log('uniqueHashtag', uniqueHashtag)
 
   // fetch hashtag node size
   const hashtagOverviewData = await fetchHashtagOverviewData(uniqueHashtag)
-  // console.log('hashtagOverviewData', hashtagOverviewData)
+  console.log('hashtagOverviewData', hashtagOverviewData)
 
   const nodesData = uniqueHashtag.map(hashtag => ({
     id: hashtag,
@@ -25,7 +30,7 @@ export const getHashtagRelationshipData = async (focusHashtag: IHashtagItem) => 
   }))
   // console.log('nodesData', nodesData)
 
-  const linksData = topNHashtagRelation.map(x => ({
+  const linksData = data.map((x: any) => ({
     source: x.nodeA,
     target: x.nodeB,
     value: x.value

@@ -1,7 +1,7 @@
 import { IHashtagItem } from "../type/dataTypes"
 
-const IS_DEV = true
-// const IS_DEV = false
+// const IS_DEV = true
+const IS_DEV = false
 
 let getHashtagListPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagList?minimumPost=1000"
 let getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
