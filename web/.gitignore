@@ -23,5 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # mock data
-/public/data
-/src/data
+# /public/data
+# /src/data

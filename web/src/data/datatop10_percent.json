@@ -1,0 +1,82 @@
+[
+  {
+    "hashtag": "#โปรโมชั่น",
+    "composition_fb": 64.9324560382,
+    "composition_in": 34.6686852218,
+    "composition_tw": 0.3872132293,
+    "composition_yt": 0.0116455107,
+    "total": 34348.0
+  },
+  {
+    "hashtag": "#Promotion",
+    "composition_fb": 75.1523843672,
+    "composition_in": 24.1807099319,
+    "composition_tw": 0.5055575475,
+    "composition_yt": 0.1613481535,
+    "total": 27890.0
+  },
+  {
+    "hashtag": "#Sale",
+    "composition_fb": 74.5030386199,
+    "composition_in": 25.3166045873,
+    "composition_tw": 0.1803567928,
+    "composition_yt": 0.0,
+    "total": 25505.0
+  },
+  {
+    "hashtag": "#SaleHere",
+    "composition_fb": 52.5672371638,
+    "composition_in": 23.9608801956,
+    "composition_tw": 23.4718826406,
+    "composition_yt": 0.0,
+    "total": 25358.0
+  },
+  {
+    "hashtag": "#ลดราคา",
+    "composition_fb": 75.6435320951,
+    "composition_in": 24.270935158,
+    "composition_tw": 0.0773867709,
+    "composition_yt": 0.0081459759,
+    "total": 24552.0
+  },
+  {
+    "hashtag": "#เซลเฮียร์",
+    "composition_fb": 67.1008785217,
+    "composition_in": 32.3927814082,
+    "composition_tw": 0.4976846843,
+    "composition_yt": 0.0086553858,
+    "total": 23107.0
+  },
+  {
+    "hashtag": "#howtoperfect",
+    "composition_fb": 6.5283627565,
+    "composition_in": 87.6288197867,
+    "composition_tw": 5.7800878215,
+    "composition_yt": 0.0627296353,
+    "total": 22318.0
+  },
+  {
+    "hashtag": "#รีวิวเซเว่น",
+    "composition_fb": 13.0326637882,
+    "composition_in": 80.9226581566,
+    "composition_tw": 5.8991927914,
+    "composition_yt": 0.1454852638,
+    "total": 21308.0
+  },
+  {
+    "hashtag": "#เซล",
+    "composition_fb": 68.2201853866,
+    "composition_in": 31.7332090518,
+    "composition_tw": 0.0466055616,
+    "composition_yt": 0.0,
+    "total": 19311.0
+  },
+  {
+    "hashtag": "#บอกต่อ",
+    "composition_fb": 7.9416442714,
+    "composition_in": 91.9157571436,
+    "composition_tw": 0.142598585,
+    "composition_yt": 0.0,
+    "total": 18233.0
+  }
+]
