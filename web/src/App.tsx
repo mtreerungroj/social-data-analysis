@@ -3,7 +3,7 @@ import { HashtagSearch } from './component/HashtagSearch';
 import { EngagementChart } from './d3/engagementChart';
 import { NetworkGraph } from './d3/networkGraph';
 import { StackedBarChart } from './d3/stackedBarChart';
-import { IHashtagEngagementRawData, IHashtagItem, IHashtagRelationshipItem } from './type/dataTypes';
+import { IHashtagEngagementRawData, IHashtagItem } from './type/dataTypes';
 import { fetchHashtagEngagementData, fetchHashtagListData } from './util/fetchData';
 import { getHashtagRelationshipData } from './util/prepareData';
 
