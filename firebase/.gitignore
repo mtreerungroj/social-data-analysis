@@ -67,3 +67,4 @@ node_modules/
 
 # ignore lib
 functions/lib
+public/*
