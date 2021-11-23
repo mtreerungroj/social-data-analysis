@@ -1,6 +1,11 @@
 # To do
-- [ ] [Networkk graph] Edge as percentage
-- [ ] [Networkk graph] Node color and font color -> clone white character
-- [ ] [Networkk graph] Edge distance depends on total_posts
+- [ ] [Network graph] Edge as percentage
+- [ ] [Network graph] Node color and font color -> clone white character
+- [ ] [Network graph] Edge distance depends on total_posts
+- [x] [Network graph] User can adjust number of node (default=20)
+- [x] [Network graph] x [Engagement chart] change color to be in the same theme
 - [ ] [Engagement chart] add transition on mouseover
-- [ ] [Networkk graph] x [Engagement chart] change color
+- [ ] *** deployment
+- [ ] responsive website
+- [x] data pipeline graph for presentation
+- [ ] description for each chart เผื่อกรรมการเอาไปเปิดดูเอง
