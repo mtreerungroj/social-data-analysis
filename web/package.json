@@ -25,7 +25,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "firebase-release": "rm -rf ../firebase/public/web && mkdir -p ../firebase/public/web && cp -R ./build/ ../firebase/public/web && cd ../firebase && firebase deploy --only hosting:web",
+    "release": "npm run build && npm run firebase-release"
   },
   "eslintConfig": {
     "extends": [
