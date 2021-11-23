@@ -1,13 +1,13 @@
 import { IHashtagItem } from "../type/dataTypes"
 
-// const IS_DEV = true
+const IS_LOCAL = window.location.hostname === "localhost"
+const BASED_URI = IS_LOCAL ? "http://localhost:5002/social-data-analysis-viz/asia-southeast1/" : "https://asia-southeast1-social-data-analysis-viz.cloudfunctions.net/"
+let getHashtagListPATH = BASED_URI + "getHashtagList?minimumPost=1000"
+let getHashtagRelationshipPATH = BASED_URI + "getHashtagRelationship?hashtag="
+let getHashtagOverviewDataPATH = BASED_URI + "getHashtagOverallData"
+let getHashtagEngagementDataPATH = BASED_URI + "getHashtagEngagementByTime?hashtag="
+
 const IS_DEV = false
-
-let getHashtagListPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagList?minimumPost=1000"
-let getHashtagRelationshipPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagRelationship?hashtag="
-let getHashtagOverviewDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagOverallData"
-let getHashtagEngagementDataPATH = "http://localhost:5002/social-data-analysis-viz/asia-southeast1/getHashtagEngagementByTime?hashtag="
-
 if (IS_DEV) {
   getHashtagRelationshipPATH = "data/hashtagRelationship_stock.json"
   getHashtagOverviewDataPATH = "data/hashtagOverviewData.json"
