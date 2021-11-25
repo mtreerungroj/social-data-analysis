@@ -6,11 +6,10 @@ import { COLOR } from './color'
 import { NodeAdjustment } from '../component/NodeAdjustment'
 import { topN } from '../util/arrayUtil';
 import { prepareHashtagRelationshipData } from '../util/prepareData';
-import { AnyNsRecord } from 'dns';
 import { Box } from '@mui/system';
 
 const MARGIN = ({ TOP: 0, RIGHT: 0, BOTTOM: 0, LEFT: 0 })
-const HEIGHT = 600
+const HEIGHT = 500
 const WIDTH = 600
 
 interface INetworkGraphProps {
@@ -71,6 +70,9 @@ export const NetworkGraph = (props: INetworkGraphProps) => {
           maxNumberOfNode={maxNumberOfNode} />
       </Box>
       <div id="network-graph-legend"></div>
+      <Box sx={{ marginTop: 2 }}>
+        Edge is the number of posts that two hashtags have in common.
+      </Box>
     </div>
     <div id="network-graph-area"></div>
   </div>
