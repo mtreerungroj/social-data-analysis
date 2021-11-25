@@ -1,6 +1,6 @@
-# Social data analysis : Hashtag relation
+# Social data analysis : Hashtag Selection Tool
 
-This project belongs to Data Visualization subject focusing about hashtag (#) relation.
+This project belongs to Data Visualization subject focusing about hashtag (#) selection.
 
 # Access
 
